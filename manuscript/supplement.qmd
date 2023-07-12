@@ -1,0 +1,67 @@
+---
+title: "Supplementary Appendix"
+subtitle: "smdi: An R package to perform structural missing data investigations"
+echo: false
+number-sections: true
+
+format: 
+  pdf:
+    fig-cap-location: top
+    fig-align: center
+    crossref:
+      fig-title: "Supplementary Figure"
+    toc: true
+    toc-depth: 2
+    number-sections: true
+    colorlinks: true
+      
+editor: visual
+#bibliography: references.bib
+#csl: jamia.csl
+---
+
+```{r setup}
+#| label: setup
+#| include: false
+#| eval: true
+library(magick)
+library(cowplot)
+library(here)
+library(knitr)
+```
+
+{{< pagebreak >}}
+
+# Supplementary material
+
+{{< pagebreak >}}
+
+# Supplementary Figures
+
+```{r}
+#| label: fig-GitHub-gui_a
+#| fig-cap: "Starting a new repository through the GitHub GUI."
+#| out-width: 115%
+
+include_graphics(here("figures", ""))
+```
+
+{{< pagebreak >}}
+
+```{r}
+#| label: fig-GitHub-gui_changes
+#| eval: false
+#| fig-cap: "Remote repositories like GitHub provide tools to visually track changes made to analytical code and corresponding output such as figures. This commit history illustrates details about the commit (e.g., commit SHA hash and message), a side-by-side comparison of the previous (upper left) and modified (upper right) version of the figure and the corresponding changes made to the R code (bottom)."
+#| out-width: 105%
+
+include_graphics(here("figures", "SFigure_4_commit_Github_gui.png"))
+```
+
+# References {.unnumbered}
+
+::: {#refs}
+:::
+
+{{< pagebreak >}}
+
+#  {.unnumbered}
