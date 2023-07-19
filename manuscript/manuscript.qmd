@@ -1,5 +1,5 @@
 ---
-title: "smdi: An R package to perform structural missing data investigations"
+title: "smdi: An R package to perform structural missing data investigations on partially observed confounders in real-world databases"
 
 code-fold: false
 eval: false
@@ -10,10 +10,14 @@ format:
   docx:
     reference-doc: custom-reference-doc.docx
     fig-cap-location: top
+    tbl-cap-location: top
 
 editor: visual
-#bibliography: references.bib
-#csl: jamia.csl
+bibliography: references.bib
+csl: computer-methods-and-programs-in-biomedicine
+
+filters:
+  - docx-landscape.lua
 ---
 
 ```{r setup}
@@ -23,21 +27,26 @@ editor: visual
 library(magick)
 library(cowplot)
 library(here)
+library(tidyverse)
+library(readxl)
+library(gt)
+
+biblio <- bibtex::read.bib("references.bib")
 ```
 
-**Authors**: Janick Weberpals^1^, Sudha R. Raman^2^, Pamela A. Shaw^3^, Hana Lee^4^, Massimiliano Russo^1^, Bradley G. Hammill^2^, Sengwee Toh^5^, John G. Connolly^5^, Kimberly J. Dandreo^5^, Fang Tian^4^, Wei Liu^4^, Jie Li^4^, José J. Hernández-Muñoz^4^, Robert J. Glynn^1^, Rishi J. Desai^1^
+**Authors**: Janick Weberpals^1^, Sudha R. Raman^2^, Pamela A. Shaw^3^, Hana Lee^4^, Bradley G. Hammill^2^, Sengwee Toh^5^, John G. Connolly^5^, Kimberly J. Dandreo^5^, Fang Tian^4^, Wei Liu^4^, Jie Li^4^, José J. Hernández-Muñoz^4^, Robert J. Glynn^1^, Rishi J. Desai^1^
 
 [Author affiliations:]{.underline}
 
-^1^ Division of Pharmacoepidemiology and Pharmacoeconomics, Department of Medicine, Brigham and Women's Hospital, Harvard Medical School, Boston, MA
+^1^Division of Pharmacoepidemiology and Pharmacoeconomics, Department of Medicine, Brigham and Women's Hospital, Harvard Medical School, Boston, MA
 
-^2^ Department of Population Health Sciences, Duke University School of Medicine, Durham, NC
+^2^Department of Population Health Sciences, Duke University School of Medicine, Durham, NC
 
-^3^ Biostatistics Division, Kaiser Permanente Washington Health Research Institute, Seattle, WA
+^3^Biostatistics Division, Kaiser Permanente Washington Health Research Institute, Seattle, WA
 
-^4^ Center for Drug Evaluation and Research, Food and Drug Administration, Silver Spring, MD
+^4^Center for Drug Evaluation and Research, Food and Drug Administration, Silver Spring, MD
 
-^5^ Department of Population Medicine, Harvard Medical School and Harvard Pilgrim Health Care Institute, Boston, MA
+^5^Department of Population Medicine, Harvard Medical School and Harvard Pilgrim Health Care Institute, Boston, MA
 
 [**Correspondence:**]{.underline}
 
@@ -71,9 +80,9 @@ Email: [jweberpals\@bwh.harvard.edu](mailto:jweberpals@bwh.harvard.edu)
 
 [**Disclosures/COI:res/COI:**]{.underline} The FDA approved the study protocol, statistical analysis plan and reviewed and approved this manuscript. Coauthors from the FDA participated in the results interpretation and in the preparation and decision to submit the manuscript for publication. The FDA had no role in data collection, management, or analysis. The views expressed are those of the authors and not necessarily those of the US FDA. Janick Weberpals reports prior employment by Hoffmann-La Roche and previously held shares in Hoffmann-La Roche. Pamela Shaw is a named inventor on a patent licensed to Novartis by the University of Pennsylvania for an unrelated project. Sengwee Toh serves as a consultant for Pfizer, Inc. and TriNetX, LLC.. Robert J Glynn has received research funding through his employer from Amarin, Kowa, Novartis, and Pfizer. Dr. Desai reports serving as Principal Investigator on investigator-initiated grants to the Brigham and Women's Hospital from Novartis, Vertex, and Bristol-Myers-Squibb on unrelated projects. All remaining authors report no disclosures or conflicts of interest.
 
-[Analytical code and data sharing statement:]{.underline} This manuscript was written using `Quarto` version 1.3.433 (<https://quarto.org/>) and R version 4.1.2. All R code and materials can be found at <https://gitlab-scm.partners.org/drugepi/smdi-manuscript>. Detailed information on packages and versions can be found in the `renv.lock` file in the linked repository. The R package and data used in this study can be downloaded from <https://janickweberpals.gitlab-pages.partners.org/smdi/>.
+[**Analytical code and data sharing statement:**]{.underline} This manuscript was written using `Quarto` version 1.3.433 (<https://quarto.org/>) and R version 4.1.2. All R code and materials can be found at <https://gitlab-scm.partners.org/drugepi/smdi-manuscript>. Detailed information on packages and versions can be found in the `renv.lock` file in the linked repository. The R package and data presented in this study can be downloaded from <https://janickweberpals.gitlab-pages.partners.org/smdi/>.
 
-[**Acknowledgments:**]{.underline} None.
+[**Acknowledgments:**]{.underline} We would like to thank all beta testers and attendees of the Division of Pharmacoepidemiology and Pharmacoeconomics Methods Incubator who gave valuable feedback on early versions of the `smdi` R package.
 
 {{< pagebreak >}}
 
@@ -89,11 +98,35 @@ Email: [jweberpals\@bwh.harvard.edu](mailto:jweberpals@bwh.harvard.edu)
 
 {{< pagebreak >}}
 
-# Introduction
+# Background
+
+Electronic health records (EHR) are increasingly used to conduct real-world evidence (RWE) studies to complement evidence coming from randomized controlled trials (RCTs) [@fdaRWE2018; @Desai2021]. Due to their detailed capture of clinical parameters such as vital signs, lab measurements, physician assessments and lifestyle factors, EHRs can significantly improve the ability to control for confounding and imbalances in prognostic factors between treatment groups, especially when linked to administrative claims databases [@asfaw2022]. However, such prognostic factors are often just partially observed which challenges the statistical analysis of the data and can result in severe bias when predicting or estimating treatment effects if not handled appropriately [@gorelick2006; @ayilara2019; @groenwold2020].
+
+In order to make an informed decision about the most appropriate analytic approach to arrive at unbiased estimates, it is crucial to investigate and understand the potential patterns and mechanisms that underlie the partially observed confounder data [@vanbuuren2018; @rubin1976; @little2019]. Usually these are not known for a given RWE study but general guidance papers and frameworks have suggested various routine diagnostics to investigate missing data patterns and mechanisms. These methods comprise standard procedures such as comparing distributions of baseline characteristics and outcomes between patients with and without the partially observed covariate(s) [@lee2021; @sondhi2023; @hotelling1931; @little1988], checking the ability to predict missingness based on observed data [@sondhi2023] and assessing if causal relationships between variables and their missingness are recoverable based on available data [@madley-dowd2019] and guided by directed acyclic graphs [@Lee2023; @Moreno-Betancur2018] or M-graphs [@mohan2021]. However, these methods have so far been only described and tested in isolation from each other and no principled approach exists. In addition, the practical implementation of all of these diagnostics is time-consuming, tedious and is consequently not often performed in both RWE and RCTs [@carroll2020; @wood2004; @harel2012].
+
+To overcome these shortcomings, we [@SentinelCI3] have recently developed and evaluated a principled approach combining a range of missing data diagnostics in an US EHR-claims database linkage [@weberpals2023]. The results of this study revealed that the combination of these diagnostics characterized simulated missing data mechanisms well and provided helpful insights for the appropriate choice of analytic methods to handle the partially observed confounder data (e.g., missing data imputation).
+
+To streamline and ease the implementation of these routine missing data diagnostics for confounder data in RWE studies, we here present and demonstrate the use of the `smdi` (structural missing data investigations) R package [@smdi]. To that end, we first provide some brief background on the theoretical assumptions that underlie the diagnostic functions of this package. We then give an overview of the implemented functions and demonstrate an end-to-end workflow application of the package with a hypothetical RWE study using simulated oncology EHR dataset that comes bundled with the package.
 
 {{< pagebreak >}}
 
 # Methods
+
+## Problem formalization
+
+As opposed to clinical trials, which are designed to collect data for research purposes in a harmonized manner, real-world data (RWD) are typically generated for administrative purposes (e.g., health insurance claims for billing purposes) or clinical documentation (e.g., EHR). Hence, confounders and prognostic factors, which need to be balanced between treatment groups in RWE studies are usually not available for all patients at all neccessary time points [@toh2012a]. If the underlying mechanism for the missingness of such covariates is informative towards the outcome under study, e.g., patients who have a certain biomarker measured have a significantly increased risk if experiencing the outcome, this can lead to bias in the resulting effect estimates for the studied treatments under common missing data approaches like complete case analysis or imputation [@groenwold2020]. Hence, it is of utmost importance to investigate the potential patterns and mechanisms to know if assumptions for specific missing data approaches hold [@pedersen2017; @lee2013].
+
+## Theoretical background
+
+In our previous work [@weberpals2023] and for the purpose of the `smdi` R package, we categorize the implemented principled missing data investigations into three groups of diagnostics, which will be discussed in this section @tbl-overview
+
+Functions overview
+
+....
+
+Data generation for hypothetical study
+
+....
 
 {{< pagebreak >}}
 
@@ -108,6 +141,46 @@ Email: [jweberpals\@bwh.harvard.edu](mailto:jweberpals@bwh.harvard.edu)
 # References {.unnumbered}
 
 ::: {#refs}
+:::
+
+{{< pagebreak >}}
+
+::: landscape
+# Tables {.unnumbered}
+
+```{r}
+#| label: tbl-overview
+#| tbl-cap: "table caption test"
+#| eval: true
+#| echo: false
+tbl1 <- readxl::read_excel(
+  path = here("tables", "tables_manual.xlsx"),
+  sheet = "table1"
+  ) %>% 
+  group_by(Group, `Group Description`) %>% 
+  gt() %>% 
+  tab_header(
+    title = "Overview of the main functions of the smdi package."
+    ) %>%
+  tab_caption(
+    caption = "Overview of the main functions of the smdi package."
+    ) %>%
+  tab_style(
+    cell_text(weight = "bold"),
+    locations = cells_column_labels(columns = everything())
+  ) %>% 
+  # tab_footnote(
+  #   footnote = "hotelling1931",
+  #   locations = cells_body(
+  #     columns = Function,
+  #     rows = Function == "**smdi_hotelling()**"
+  #     )
+  #   ) %>% 
+  fmt_markdown()
+
+
+tbl1
+```
 :::
 
 {{< pagebreak >}}
