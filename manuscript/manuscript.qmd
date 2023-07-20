@@ -21,12 +21,13 @@ filters:
 ```{r setup}
 #| label: setup
 #| include: false
-library(magick)
 library(cowplot)
 library(here)
 library(tidyverse)
 library(readxl)
 library(gt)
+library(gtsummary)
+library(smdi)
 ```
 
 **Authors**: Janick Weberpals^1^, Sudha R. Raman^2^, Pamela A. Shaw^3^, Hana Lee^4^, Bradley G. Hammill^2^, Sengwee Toh^5^, John G. Connolly^5^, Kimberly J. Dandreo^5^, Fang Tian^4^, Wei Liu^4^, Jie Li^4^, José J. Hernández-Muñoz^4^, Robert J. Glynn^1^, Rishi J. Desai^1^
@@ -99,9 +100,9 @@ Electronic health records (EHR) are increasingly used to conduct real-world evid
 
 In order to make an informed decision about the most appropriate analytic approach to arrive at unbiased estimates, it is crucial to investigate and understand the potential patterns and mechanisms that underlie the partially observed confounder data [@vanbuuren2018; @rubin1976; @little2019]. Usually these are not known for a given RWE study but general guidance papers and frameworks have suggested various routine diagnostics to investigate missing data patterns and mechanisms. These methods comprise standard procedures such as comparing distributions of baseline characteristics and outcomes between patients with and without the partially observed covariate(s) [@lee2021; @sondhi2023; @hotelling1931; @little1988; @pedersen2017], checking the ability to predict missingness based on observed data [@sondhi2023] and assessing if causal relationships between variables and their missingness are recoverable based on available data [@madley-dowd2019] guided by directed acyclic graphs [@Lee2023; @Moreno-Betancur2018] or M-graphs [@mohan2021]. However, these methods have so far been only described and tested in isolation from each other and no principled approach exists. In addition, the practical implementation of all of these diagnostics is time-consuming, tedious and is consequently not often performed in both RWE and RCTs [@carroll2020; @wood2004; @harel2012].
 
-To overcome these shortcomings, we [@SentinelCI3] have recently developed and evaluated a principled approach combining a range of missing data diagnostics in an US EHR-claims database linkage [@weberpals2023]. The results of this study revealed that the combination of these diagnostics characterized simulated missing data mechanisms well and provided helpful insights for the appropriate choice of analytic methods to handle the partially observed confounder data (e.g., missing data imputation).
+To overcome these shortcomings, we [@SentinelCI3] have recently developed and evaluated a principled approach combining a range of missing data diagnostics in an US EHR-claims database linkage [@weberpals2023]. The results of this large-scale study revealed that the combination of these diagnostics characterized simulated missing data mechanisms well and provided helpful insights for the appropriate choice of analytic methods to handle the partially observed confounder data (e.g., missing data imputation).
 
-To streamline and ease the implementation of these routine missing data diagnostics for confounder data in RWE studies, we here present and demonstrate the use of the `smdi` (structural missing data investigations) R package [@smdi]. To that end, we first provide some brief background on the theoretical assumptions that underlie the diagnostic functions of this package. We then give an overview of the implemented functions and demonstrate an end-to-end workflow application of the package with a hypothetical RWE study using a simulated oncology EHR dataset that comes bundled with the package.
+To streamline and ease the implementation of these routine missing data diagnostics for confounder data in RWE studies, we here present and demonstrate the use of the `smdi` (structural missing data investigations) R package [@smdi]. To that end, we first provide an overview on the package's main functions including the underlying theoretical assumptions. We then demonstrate the practical application of the package by illustrating and end-to-end workflow with a hypothetical RWE study using a simulated oncology EHR dataset that comes bundled with the package.
 
 {{< pagebreak >}}
 
@@ -135,9 +136,15 @@ Finally, the third group diagnostics with the `smdi_outcome()` function examines
 
 Currently, `smdi_outcome()` supports three outcome regression types: linear regression (*lm* [@stats]) for continuous outcomes, logistic regression (*glm* [@stats]) for binary outcomes and a Cox proportional hazards model (*coxph* [@survival]) for time-to-event outcomes. Besides the specification of the regression type, the user needs to specify the name of the column that contains the outcome using the *form_lhs* parameter (e.g., `Surv(eventtime, status)` in case of a Cox model) and if resulting beta coefficients should be displayed exponentiated or not. The function returns a table with univariate and adjusted beta coefficients and 95% confidence intervals for each partially observed covariate.
 
-## Data generation for hypothetical study
+## Exemplary RWE study and data generation
 
-....
+To showcase the practical implementation of the functions provided in `smdi`, the package comes with simulated example EHR dataset focusing on an exemplary RWE study in the field of oncology with `r formatC(nrow(smdi_data), format = "fg", big.mark = ",")` lung cancer patients (Table 2).
+
+For this exemplary RWE study, we compared two systemic antineoplastic durg treatment regimens (`Drug A` versus `Drug B`). The true outcome of interest was overall survival (OS) which was defined as the time from treatment initiation to death due to any reason or censoring with a truncated follow-up time of 5 years (Supplementary Table and Supplementary Figure ). To simula The desired treatment effect estimate was defined with a hazard ratio (HR) of 1.0 and we assumed that the proportional hazards assumption holds. 
+
+### Covariates
+
+
 
 {{< pagebreak >}}
 
@@ -182,6 +189,38 @@ tbl1 <- readxl::read_excel(
 
 
 tbl1
+```
+
+{{< pagebreak >}}
+
+```{r}
+#| label: tbl_cohort
+#| eval: true
+#| echo: false
+#| message: false
+
+labels <- readxl::read_excel(
+  path = here("tables", "tables_manual.xlsx"),
+  sheet = "covariates"
+  )
+
+labels_list <- as.list(labels$`Variable Label`)
+names(labels_list) <- labels$`Variable Name`
+
+tbl_cohort <- smdi_data %>% 
+  select(-c(eventtime, status)) %>% 
+  mutate(exposure = ifelse(exposure == 0, "Drug A", "Drug B")) %>% 
+  mutate(across(c(female_cat, smoking_cat, physical_cat, alk_cat, histology_cat, copd_cat), ~ifelse(.x == "0", 0, 1))) %>% 
+  tbl_summary(
+    by = "exposure", 
+    label = labels_list, 
+    missing = "ifany"
+    ) %>% 
+  add_overall() %>% 
+  add_difference()
+
+
+tbl_cohort
 ```
 :::
 
