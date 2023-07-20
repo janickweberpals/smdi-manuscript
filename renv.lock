@@ -21,7 +21,7 @@
       "Package": "MASS",
       "Version": "7.3-60",
       "Source": "Repository",
-      "Repository": "CRAN",
+      "Repository": "RSPM",
       "Hash": "a56a6365b3fa73293ea8d084be0d9bb0",
       "Requirements": []
     },
@@ -29,7 +29,7 @@
       "Package": "Matrix",
       "Version": "1.6-0",
       "Source": "Repository",
-      "Repository": "CRAN",
+      "Repository": "RSPM",
       "Hash": "31262fd18481fab05c5e7258dac163ca",
       "Requirements": [
         "lattice"
@@ -63,7 +63,7 @@
       "Package": "V8",
       "Version": "4.3.2",
       "Source": "Repository",
-      "Repository": "CRAN",
+      "Repository": "RSPM",
       "Hash": "85986a8a9f63af35ad24a022dfa48fdb",
       "Requirements": [
         "Rcpp",
@@ -96,16 +96,6 @@
       "Repository": "CRAN",
       "Hash": "543776ae6848fde2f48ff3816d0628bc",
       "Requirements": []
-    },
-    "bibtex": {
-      "Package": "bibtex",
-      "Version": "0.5.1",
-      "Source": "Repository",
-      "Repository": "RSPM",
-      "Hash": "a704d52e87822191b42c715c568f96dd",
-      "Requirements": [
-        "backports"
-      ]
     },
     "bigD": {
       "Package": "bigD",
@@ -567,7 +557,7 @@
       "Package": "gt",
       "Version": "0.9.0",
       "Source": "Repository",
-      "Repository": "CRAN",
+      "Repository": "RSPM",
       "Hash": "d55233a737e43e44987724e57dfec302",
       "Requirements": [
         "base64enc",
@@ -771,7 +761,7 @@
       "Package": "lattice",
       "Version": "0.21-8",
       "Source": "Repository",
-      "Repository": "CRAN",
+      "Repository": "RSPM",
       "Hash": "0b8a6d63c8770f02a8b5635f3c431e6b",
       "Requirements": []
     },
@@ -802,7 +792,7 @@
       "Package": "magick",
       "Version": "2.7.4",
       "Source": "Repository",
-      "Repository": "CRAN",
+      "Repository": "RSPM",
       "Hash": "92dd08195d2270e188dcac8d4b219e84",
       "Requirements": [
         "Rcpp",
@@ -822,7 +812,7 @@
       "Package": "markdown",
       "Version": "1.7",
       "Source": "Repository",
-      "Repository": "CRAN",
+      "Repository": "RSPM",
       "Hash": "0ffaea87c070a56d140ce00b0727b278",
       "Requirements": [
         "commonmark",
@@ -844,7 +834,7 @@
       "Package": "mgcv",
       "Version": "1.9-0",
       "Source": "Repository",
-      "Repository": "CRAN",
+      "Repository": "RSPM",
       "Hash": "086028ca0460d0c368028d3bda58f31b",
       "Requirements": [
         "Matrix",
@@ -890,7 +880,7 @@
       "Package": "nlme",
       "Version": "3.1-162",
       "Source": "Repository",
-      "Repository": "CRAN",
+      "Repository": "RSPM",
       "Hash": "0984ce8da8da9ead8643c5cbbb60f83e",
       "Requirements": [
         "lattice"
@@ -1007,7 +997,7 @@
       "Package": "reactR",
       "Version": "0.4.4",
       "Source": "Repository",
-      "Repository": "CRAN",
+      "Repository": "RSPM",
       "Hash": "75389c8091eb14ee21c6bc87a88b3809",
       "Requirements": [
         "htmltools"
@@ -1017,7 +1007,7 @@
       "Package": "reactable",
       "Version": "0.4.4",
       "Source": "Repository",
-      "Repository": "CRAN",
+      "Repository": "RSPM",
       "Hash": "6069eb2a6597963eae0605c1875ff14c",
       "Requirements": [
         "digest",
