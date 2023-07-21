@@ -140,11 +140,9 @@ Currently, `smdi_outcome()` supports three outcome regression types: linear regr
 
 To showcase the practical implementation of the functions provided in `smdi`, the package comes with simulated example EHR dataset focusing on an exemplary RWE study in the field of oncology with `r formatC(nrow(smdi_data), format = "fg", big.mark = ",")` lung cancer patients (Table 2).
 
-For this exemplary RWE study, we compared two systemic antineoplastic durg treatment regimens (`Drug A` versus `Drug B`). The true outcome of interest was overall survival (OS) which was defined as the time from treatment initiation to death due to any reason or censoring with a truncated follow-up time of 5 years (Supplementary Table and Supplementary Figure ). To simula The desired treatment effect estimate was defined with a hazard ratio (HR) of 1.0 and we assumed that the proportional hazards assumption holds. 
+For this exemplary RWE study, we compared two systemic antineoplastic durg treatment regimens (`Drug A` versus `Drug B`). The true outcome of interest was overall survival (OS) which was defined as the time from treatment initiation to death due to any reason or censoring with a truncated follow-up time of 5 years (Supplementary Table and Supplementary Figure ). To simula The desired treatment effect estimate was defined with a hazard ratio (HR) of 1.0 and we assumed that the proportional hazards assumption holds.
 
 ### Covariates
-
-
 
 {{< pagebreak >}}
 
