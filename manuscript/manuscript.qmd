@@ -65,11 +65,11 @@ Fax: 617-232-8602
 
 Email: [jweberpals\@bwh.harvard.edu](mailto:jweberpals@bwh.harvard.edu)
 
-[**Word count:**]{.underline} xxxx words
+[**Word count:**]{.underline} xxxx words/2000 words
 
-[**Tables:**]{.underline}
+[**Tables:**]{.underline} **x/2**
 
-[**Figures:**]{.underline}
+[**Figures:**]{.underline} **x/3**
 
 [**Supplementary material:**]{.underline}
 
@@ -81,13 +81,15 @@ Email: [jweberpals\@bwh.harvard.edu](mailto:jweberpals@bwh.harvard.edu)
 
 [**Disclosures/COI:**]{.underline} The FDA approved the study protocol, statistical analysis plan and reviewed and approved this manuscript. Coauthors from the FDA participated in the results interpretation and in the preparation and decision to submit the manuscript for publication. The FDA had no role in data collection, management, or analysis. The views expressed are those of the authors and not necessarily those of the US FDA. Janick Weberpals reports prior employment by Hoffmann-La Roche and previously held shares in Hoffmann-La Roche. Pamela Shaw is a named inventor on a patent licensed to Novartis by the University of Pennsylvania for an unrelated project. Sengwee Toh serves as a consultant for Pfizer, Inc. and TriNetX, LLC.. Robert J Glynn has received research funding through his employer from Amarin, Kowa, Novartis, and Pfizer. Dr. Desai reports serving as Principal Investigator on investigator-initiated grants to the Brigham and Women's Hospital from Novartis, Vertex, and Bristol-Myers-Squibb on unrelated projects. All remaining authors report no disclosures or conflicts of interest.
 
-[**Analytical code and data sharing statement:**]{.underline} This manuscript was written using `Quarto` version 1.3.433 (<https://quarto.org/>) and R version 4.1.2. All R code and materials can be found at <https://gitlab-scm.partners.org/drugepi/smdi-manuscript>. Detailed information on packages and versions can be found in the `renv.lock` file in the linked repository. The R package and data presented in this study can be downloaded from <https://janickweberpals.gitlab-pages.partners.org/smdi/>.
+[**Analytical code and data sharing statement:**]{.underline} This manuscript was written using `Quarto` version 1.3.433 (<https://quarto.org/>) and R version 4.1.2. All R code, materials and depedency information can be found at <https://gitlab-scm.partners.org/drugepi/smdi-manuscript>. The R package presented in this study can be downloaded from CRAN via `install.packages("smdi")` or from <https://janickweberpals.gitlab-pages.partners.org/smdi/>.
 
 [**Acknowledgments:**]{.underline} We would like to thank all beta testers and attendees of the Division of Pharmacoepidemiology and Pharmacoeconomics Methods Incubator who gave valuable feedback on early versions of the `smdi` R package.
 
 {{< pagebreak >}}
 
 # Abstract {.unnumbered}
+
+xxx words/150 words
 
 {{< pagebreak >}}
 
