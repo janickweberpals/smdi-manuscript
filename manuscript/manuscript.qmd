@@ -30,7 +30,6 @@ library(gtsummary)
 library(flextable)
 library(officer)
 library(captioner)
-library(smdi)
 
 table_cap <- captioner(prefix = "Table")
 ```
@@ -101,7 +100,7 @@ xxx words/150 words
 
 {{< pagebreak >}}
 
-# Background
+# Background and Significance
 
 Electronic health records (EHR) are increasingly used to conduct real-world evidence (RWE) studies to complement evidence coming from randomized controlled trials (RCTs) [@fdaRWE2018; @Desai2021]. Due to their detailed capture of clinical parameters such as vital signs, lab measurements, physician assessments and lifestyle factors, EHRs can significantly improve the ability to control for confounding and imbalances in prognostic factors between treatment groups, especially when linked to administrative claims databases [@asfaw2022]. However, such prognostic factors are often just partially observed which challenges the statistical analysis of the data and can result in severe bias when predicting or estimating treatment effects if not handled appropriately [@gorelick2006; @ayilara2019; @groenwold2020].
 
@@ -127,6 +126,8 @@ In order to make an informed decision about the most appropriate analytic approa
 
 To overcome these shortcomings, we [@SentinelCI3] have recently developed and evaluated a principled approach combining a range of missing data diagnostics in an US EHR-claims database linkage [@weberpals2023]. The results of this large-scale study revealed that the combination of these diagnostics characterized simulated missing data mechanisms well and provided helpful insights for the appropriate choice of analytic methods to handle the partially observed confounder data (e.g., missing data imputation).
 
+# Objective
+
 To streamline and ease the implementation of these routine missing data diagnostics for confounder data in RWE studies, we here present and demonstrate the use of the `smdi` (structural missing data investigations) R package [@smdi]. To that end, we first provide an overview on the package's main functions including the underlying theoretical assumptions. We then demonstrate the practical application of the package by illustrating and end-to-end workflow with a hypothetical RWE study using a simulated oncology EHR dataset that comes bundled with the package.
 
 {{< pagebreak >}}
@@ -136,6 +137,10 @@ To streamline and ease the implementation of these routine missing data diagnost
 ## Problem Formalization
 
 As opposed to clinical trials, which are designed to collect data for research purposes in a harmonized manner, real-world data (RWD) are typically generated for administrative purposes (e.g., health insurance claims for billing purposes) or clinical documentation (e.g., EHR). Hence, confounders and prognostic factors, which need to be balanced between treatment groups in RWE studies, are usually not available for all patients at all necessary time points [@toh2012a]. If the underlying mechanism for the missingness of such covariates is not at random, e.g., patients with higher levels of a prognostic biomarker are more likely to be missing, this can lead to bias in the resulting effect estimates for the studied treatments under common missing data approaches like complete case analysis or imputation [@groenwold2020]. Hence, it is of utmost importance to investigate the potential patterns and mechanisms to know if assumptions for specific missing data approaches hold [@pedersen2017; @lee2013].
+
+## **Package details and installation instructions**
+
+...
 
 ## Theoretical Background and Main Package Functions
 
