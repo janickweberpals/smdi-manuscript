@@ -104,7 +104,7 @@ xxx words/150 words
 
 Electronic health records (EHR) are increasingly used to conduct real-world evidence (RWE) studies to complement evidence coming from randomized controlled trials (RCTs) [@fdaRWE2018; @Desai2021]. Due to their detailed capture of clinical parameters such as vital signs, lab measurements, physician assessments and lifestyle factors, EHRs can significantly improve the ability to control for confounding and imbalances in prognostic factors between treatment groups, especially when linked to administrative claims databases [@asfaw2022]. However, such prognostic factors are often just partially observed which challenges the statistical analysis of the data and can result in severe bias when predicting or estimating treatment effects if not handled appropriately [@gorelick2006; @ayilara2019; @groenwold2020].
 
-In order to make an informed decision about the most appropriate analytic approach to arrive at unbiased estimates, it is crucial to investigate and understand the potential patterns and mechanisms that underlie the partially observed confounder data [@vanbuuren2018; @rubin1976; @little2019]. Usually these are not known for a given RWE study but general guidance papers and frameworks have suggested various routine diagnostics to investigate missing data patterns and mechanisms (see definitions box). These methods comprise standard procedures such as comparing baseline characteristics and outcomes between patients with and without the partially observed covariate(s) [@lee2021; @sondhi2023a; @hotelling1931; @little1988; @pedersen2017], checking the ability to predict missingness based on observed data [@sondhi2023a] and assessing if causal relationships between variables and their missingness are recoverable based on available data [@madley-dowd2019] guided by directed acyclic graphs [@Lee2023; @Moreno-Betancur2018] or M-graphs [@mohan2021]. However, these methods have so far been only described and tested in isolation from each other and no principled approach exists. In addition, the practical implementation of all of these diagnostics is time-consuming, tedious and is consequently not often performed [@carroll2020; @wood2004; @harel2012].
+In order to make an informed decision about the most appropriate analytic approach to arrive at unbiased estimates, it is crucial to investigate and understand the potential patterns and mechanisms that underlie the partially observed confounder data [@vanbuuren2018; @rubin1976; @little2019]. Usually these are not known for a given RWE study but general guidance papers and frameworks have suggested various routine diagnostics to investigate missing data patterns and mechanisms (see definitions box). These methods comprise standard procedures such as comparing baseline characteristics and outcomes between patients with and without the partially observed covariate(s) [@lee2021; @sondhi2023a; @hotelling1931; @little1988; @pedersen2017], checking the ability to predict missingness based on observed data [@sondhi2023a] and assessing if causal relationships between variables and their missingness are recoverable based on available data [@madley-dowd2019] guided by directed acyclic graphs [@Lee2023; @Moreno-Betancur2018] or M-graphs [@mohan2021]. However, these methods have so far been only described and tested in isolation from each other and no principled approach exists. In addition, the practical implementation of all of these diagnostics is time-consuming, tedious and is consequently not often performed in studies [@carroll2020; @wood2004; @harel2012].
 
 ::: {#taxonomies .callout-note}
 ## Definitions: Basic missing data taxonomies.
@@ -128,21 +128,33 @@ To overcome these shortcomings, we [@SentinelCI3] have recently developed and ev
 
 # Objective
 
-To streamline and ease the implementation of these routine missing data diagnostics for confounder data in RWE studies, we developed the `smdi` (structural missing data investigations) R package [@smdi]. The goal of `smdi` is to provide a toolbox of different diagnostics to scrutinize partially observed confounder data which had not been implemented elsewhere yet and complement other analytic R packages regularly used in RWE studies.
-
-{{< pagebreak >}}
+To streamline and ease the implementation of these routine missing data diagnostics for confounder data in RWE studies, we developed the `smdi` (structural missing data investigations) R package [@smdi]. The goal of `smdi` is to provide a toolbox of different diagnostic analyses to scrutinize partially observed confounder data which had not been implemented elsewhere yet and complement other analytic R packages regularly used in RWE studies.
 
 # Methods
 
 ## **Package details and installation instructions**
 
-The smdi R package was written in R language (version 4.2.1)
+The `smdi` R package was written in R language (version 4.2.1) and using the devtools [@devtools] and roxygen [@roxygen2] packages. The package is available on CRAN (<https://cran.r-project.org/web/packages/smdi)>, Posit Public Package Manager (<https://packagemanager.posit.co/client/#/repos/2/packages/smdi>) and GitLab (<https://gitlab-scm.partners.org/janickweberpals/smdi>) and can be installed via the `install.packages("smdi")` command. To ensure the quality and robustness of the package and corresponding functions, we implemented comprehensive unit tests with a coverage of 95.81% and established automated R CMD checks [@wickham2023r] via continuous integration and deployment which are scheduled to execute on a daily basis.
 
-## Theoretical Background and Main Package Functions
+# Results {#sec-results}
 
-For the implementation of these routine missing data diagnostics, we categorized the main functions of the `smdi` R package into three group diagnostics based on their general analytic properties (**`r table_cap("tbl1", display = "cite")`**). In this section, we will explain the basic ideas behind the main package functions, the parameters a user can specify, the results that are being returned by calling the functions and the interpretation of results. Generally, for all functions in the `smdi` package, a *dataframe* is expected (`data` parameter) as input with a format where one row represents one unqiue patient and the columns stand for the variables relevant for the study, i.e., the exposure, outcome, fully observed covariates and the partially observed covariates (one-row-per-patient format). Any non-informative columns, such as patient identifiers, date columns or zip codes should be dropped from the dataframe before calling the functions. Throughout all functions, the user has the option to specify a vector with the column name(s) of the partially observed covariate(s) that should be investigated (`covar` parameter). If nothing is specified, all functions consider automatically any variable in the dataframe that exhibits at least one missing value.
+## Main Package Functions
 
-### Group 1 Diagnostics
+@fig-workflow illustrates the recommended workflow and functions that can be used to systematically approach diagnostics on partially observed confounders.
+
+In general, the workflow comprises two broader diagnostic categories: descriptives and pattern diagnostics and inferential diagnostics on potentially underlying missingness mechanisms. This section covers the basic ideas behind the main package functions, the parameters a user can specify, the results that are being returned by calling the functions and the interpretation of results. Generally, for all functions in the `smdi` package, a *dataframe* is expected (`data` parameter) as input with a format where one row represents one unqiue patient and the columns stand for the variables relevant for the study, i.e., the exposure, outcome, fully observed covariates and the partially observed covariates. Any non-informative columns, such as patient identifiers, date columns or zip codes should be dropped from the dataframe before calling the functions. Throughout all functions, the user has the option to specify a vector with the column name(s) of the partially observed covariate(s) that should be investigated (`covar` parameter). If nothing is specified, all functions consider automatically any variable in the dataframe that exhibits at least one missing value.
+
+### Descriptives and Pattern Diagnostics
+
+As a first step to explore the missingness in new datasets, the `smdi` package provides a few basic functions to describe and summarize missingness across all covariates. The `smdi_summarize()` function takes the dataframe as input and returns the amount and proportion of missing observations for partially observed covariates which can also be stratified by one or more grouping variables (e.g., by an exposure or outcome variable). The `smdi_vis()` function returns a corresponding bar chart plot.
+
+[@ruddle2022]
+
+### Inferential Three Group Diagnostics
+
+The main functions used to investigate the potential underlying missing data mechanisms are categorized into three group diagnostics based on their general analytic properties (**`r table_cap("tbl1", display = "cite")`**).
+
+#### Group 1 Diagnostics
 
 The aim of the `smdi_asmd()`, `smdi_hotelling()` and `smdi_little()` functions is to explore dissimilarities in patient characteristics between those with and without observed values for the partially observed covariate. According to Rubin's framework on inference and missing data [@rubin1976], when missingness is at random (MAR), it can be explained by observed covariates. Consequently, significant differences in patient characteristics would be expected under a MAR mechanism between strata of patients with and without the partially observed covariate. If the missingness depends only on unobserved factors (missing not at random \[MNAR\]) or does not depend on either observed or unobserved covariates (missing completely at random \[MCAR\]), differences should not be observable.
 
@@ -150,21 +162,17 @@ To quantify and test such differences, the `smdi_asmd()` function computes absol
 
 The `smdi_hotelling()` and `smdi_little()` functions complement the `smdi_asmd()` function by examining the differences in patient characteristics as a formal statistical hypothesis test. Hotelling's test [@hotelling1931; @Hotelling] formalizes this is a multivariate t-test for each partially observed covariate, which means that `smdi_hotelling()` returns a test statistic and a corresponding p-value for each each partially observed covariate individually. In contrast, Little's test [@little1988; @naniar] (`smdi_little()`) computes a single global chi-square test statistic and p-value across all partially observed covariates with the null hypothesis that the data is MCAR.
 
-### Group 2 Diagnostics
+#### Group 2 Diagnostics
 
 The group 2 diagnostics assesses the ability to predict missingness based on observed covariates via the `smdi_rf()` functions. This function trains and fits a random forest classification model [@randomForest; @sondhi2023a] to predict the missing indicator of the partially observed covariate given observed covariates as the predictors. If the resulting area under the receiver operating characteristic curve (AUC) is meaningfully higher than 0.5, this would give some evidence for MAR being the underlying missingness mechanism. In case of values close 0.5, this would rather indicate a random prediction and translate to potential MCAR or MNAR mechanisms.
 
 The function returns an object of class `rf` which generically displays an overview of the AUC values of all partially observed covariates. The AUC values are based on the prediction made in the respective test datasets. For more details, the `rf` object additionally includes a *ggplot2* graph for each partially observed covariate displaying the relative importance of the predictors in the training dataset expressed as the mean decrease in accuracy. This metric can be valuable for interpreting and identifying strong predictors of missingness. It quantifies how much the accuracy of the prediction (i.e., the ratio of correct predictions to the total number of predictions made) would decrease if we excluded a specific predictor from the prediction model. For tuning the random forest model, the `smdi_rf()` function has a few parameters that can be specified by the user for optimization such as the number of trees to grow (`ntree`; default is 1,000 trees), the ratio of the split between train and test datasets (`train_test_ratio`; default is a 70/30 split) and the number of cores to parallelize the computation on (`n_cores`, default is 1), since this function can be very time consuming, especially with larger datasets.
 
-### Group 3 Diagnostics
+#### Group 3 Diagnostics
 
 Finally, the third group diagnostics with the `smdi_outcome()` function examines the association of the missingness indicator of the partially observed covariate and the outcome under study. The function will compute both a univariate model and a model adjusted for all other covariates included in the dataset. In previous simulations, we observed characteristic patterns for univariate and adjusted associations of the missing indicator and the outcome that matched simulated underlying missingness mechanisms [@weberpals2023]. As one would expect, under a MCAR mechanism there was no difference in the outcome between patients with and without a value for the partially observed covariate. Under MAR, given that missingness can be explained by observed covariates, a potential spurious association in the univariate model disappeared after adjustment. If the missingness followed any MNAR mechanism, an association was observed in both univariate and adjusted models.
 
 Currently, `smdi_outcome()` supports three outcome regression types: linear regression (*lm* [@stats]) for continuous outcomes, logistic regression (*glm* [@stats]) for binary outcomes and a Cox proportional hazards model (*coxph* [@survival]) for time-to-event outcomes. Besides the specification of the regression type, the user needs to specify the name of the column that contains the outcome using the *form_lhs* parameter (e.g., `Surv(eventtime, status)` in case of a Cox model) and if resulting beta coefficients should be exponentiated or not. The function returns a table with univariate and adjusted beta coefficients and 95% confidence intervals for each partially observed covariate.
-
-{{< pagebreak >}}
-
-# Results {#sec-results}
 
 {{< pagebreak >}}
 
@@ -205,75 +213,6 @@ tbl1
 
 {{< pagebreak >}}
 
-`r table_cap(name = "tbl2", "Patient characteristics of the exemplary cohort used to showcase the smdi package.")`
-
-```{r}
-#| echo: false
-#| message: false
-
-labels <- readxl::read_excel(
-  path = here("tables", "tables_manual.xlsx"),
-  sheet = "covariates"
-  )
-
-labels_list <- as.list(labels$`Variable Label`)
-names(labels_list) <- labels$`Variable Name`
-
-# set compact theme 
-theme_gtsummary_compact(font_size = 11)
-  
-tbl2 <- smdi_data %>% 
-  select(-c(eventtime, status)) %>% 
-  mutate(exposure = ifelse(exposure == 0, "Drug A", "Drug B")) %>% 
-  mutate(
-    across(
-      c(
-        female_cat, 
-        smoking_cat, 
-        physical_cat, 
-        alk_cat, 
-        histology_cat, 
-        copd_cat
-        ), 
-      ~ifelse(.x == "0", 0, 1)
-      )
-    ) %>% 
-  tbl_summary(
-    by = "exposure", 
-    label = labels_list, 
-    missing = "ifany"
-    ) %>% 
-  add_overall() %>% 
-  add_p() %>% 
-  as_flex_table() %>% 
-  font(fontname = "Calibri") %>% 
-  align(align = "left")
-
-
-tbl2
-```
-
-{{< pagebreak >}}
-
-`r table_cap(name = "tbl3", "Overview of covariates of de novo simulated cohort used to showcase the smdi package.")`
-
-```{r}
-#| echo: false
-
-read_excel(
-  path = here('tables', 'tables_manual.xlsx'),
-  sheet = "covariates"
-  ) %>% 
-  select(-`Variable Name`) %>% 
-  gt() %>% 
-  tab_style(
-    cell_text(weight = "bold"),
-    locations = cells_column_labels(columns = everything())
-    )
-```
-
-{{< pagebreak >}}
-
 # Figures {.unnumbered}
 
 ```{r}
@@ -283,77 +222,4 @@ read_excel(
 #| out-width: 110%
 knitr::include_graphics(here::here("figures", "workflow.jpg"))
 ```
-
-{{< pagebreak >}}
-
-```{r}
-#| label: fig-univariate
-#| fig-cap: "Complete case analysis."
-#| echo: false
-#| eval: false
-#| out-width: 110%
-
-library(survival)
-library(broom)
-suppressPackageStartupMessages(library(mice))
-library(survival)
-
-# specifiy form
-cox_lhs <- "survival::Surv(eventtime, status)"
-cox_rhs <- paste(colnames(smdi_data %>% select(-c(eventtime, status))), collapse = " + ")
-cox_form <- as.formula(paste(cox_lhs, "~", cox_rhs))
-
-# fit univariate
-cox_univariate <- survival::coxph(survival::Surv(eventtime, status) ~ exposure, 
-                                  data = smdi_data) %>% 
-  {. ->> cox_n} %>% 
-  broom::tidy(conf.int = TRUE, conf.level = 0.95, exponentiate = TRUE) %>% 
-  filter(term == "exposure") %>% 
-  mutate(
-    method = "Univariate",
-    n = formatC(cox_n$n, big.mark = ",", format = "fg"),
-    events = formatC(cox_n$nevent, big.mark = ",", format = "fg"),
-    ) %>% 
-  select(method, n, events, estimate, conf.low, conf.high)
-
-# fit cox for complete case analysis
-cox_cca <- survival::coxph(cox_form, data = smdi_data) %>% 
-  {. ->> cox_n} %>% 
-  broom::tidy(conf.int = TRUE, conf.level = 0.95, exponentiate = TRUE) %>% 
-  filter(term == "exposure") %>% 
-  mutate(
-    method = "Complete case analysis",
-    n = formatC(cox_n$n, big.mark = ",", format = "fg"),
-    events = formatC(cox_n$nevent, big.mark = ",", format = "fg")
-    ) %>% 
-  select(method, n, events, estimate, conf.low, conf.high)
-
-# fit multiple imputation model and cox model
-cox_mi <- mice::futuremice(
-  data = smdi_data,
-  method = "rf",
-  rfPackage = "randomForest",
-  m = 50,
-  n.core = parallel::detectCores(),
-  parallelseed = 42,
-  print = FALSE
-  ) %>% 
-  with(expr = survival::coxph(formula(paste(format(cox_form), collapse = "")))) %>%
-  mice::pool() %>%
-  {. ->> cox_n} %>% 
-  broom::tidy(conf.int = TRUE, conf.level = 0.95, exponentiate = TRUE) %>% 
-  filter(term == "exposure") %>% 
-  mutate(
-    method = "Multiple imputation",
-    n = formatC(mean(cox_n$glanced$n), big.mark = ",", format = "fg"),
-    events = formatC(mean(cox_n$glanced$nevent), big.mark = ",", format = "fg")
-    ) %>% 
-  select(method, n, events, estimate, conf.low, conf.high)
-
-bind_rows(cox_univariate, cox_cca, cox_mi) %>% 
-  mutate(across(where(is.numeric), ~formatC(.x, digits = 2, format = "f"))) %>% 
-  gt()
-```
-
-{{< pagebreak >}}
 :::
