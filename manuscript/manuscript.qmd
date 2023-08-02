@@ -148,7 +148,7 @@ In general, the workflow comprises two broader diagnostic categories: descriptiv
 
 As a first step to explore the missingness in new datasets, the `smdi` package provides a few basic functions to describe and summarize missingness across all covariates. The `smdi_summarize()` function takes the dataframe as input and returns the amount and proportion of missing observations for partially observed covariates which can also be stratified by one or more grouping variables (e.g., by an exposure or outcome variable). The `smdi_vis()` function returns a corresponding bar chart plot.
 
-[@ruddle2022]
+To visually inspect potential missing data patterns, we adapted the `gg_miss_upset()` function of the naniar package [@naniar-2]. This function uses a set visualization technique to visually infer potential (non)monotone patterns based on the number of intersecting [@ruddle2022]
 
 ### Inferential Three Group Diagnostics
 
