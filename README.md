@@ -13,8 +13,6 @@ More information about the package can be found under:
 
 ## Structure
 
--   .Rprofile - defines paths and activates `renv`, options for Posit R
-    package manager
 -   manuscript - manuscript, bibliography, cover letter and meta files
     to render to .docx format
 -   tables - main and supplementary tables (R objects and .docx format)
@@ -22,6 +20,8 @@ More information about the package can be found under:
     format)
 -   renv/renv.lock - `renv` directories to manage R dependencies and
     versions used in this simulation
+-   .Rprofile - defines paths and activates `renv`, options for Posit R
+    package manager
 
 ## Dependencies
 
