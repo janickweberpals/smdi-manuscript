@@ -30,7 +30,7 @@ renv::restore()
 
 ## Directory overview
 
-```{r}
+```{r, echo = FALSE}
 fs::dir_tree(recurse = 1)
 ```
 

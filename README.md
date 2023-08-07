@@ -32,8 +32,6 @@ running the following command:
 
 ## Directory overview
 
-    fs::dir_tree(recurse = 1)
-
     ## .
     ## ├── README.Rmd
     ## ├── README.md
