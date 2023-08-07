@@ -41,20 +41,19 @@ running the following command:
     ## │   ├── Figure_3_results.jpg
     ## │   └── manual_figures.pptx
     ## ├── manuscript
-    ## │   ├── computer-methods-and-programs-in-biomedicine.csl
     ## │   ├── cover_letter.docx
     ## │   ├── custom-reference-doc.docx
     ## │   ├── docx-landscape.lua
     ## │   ├── jamia.csl
     ## │   ├── manuscript.docx
     ## │   ├── manuscript.qmd
-    ## │   ├── references.bib
-    ## │   └── supplement.qmd
+    ## │   └── references.bib
     ## ├── renv
     ## │   ├── activate.R
     ## │   ├── library
     ## │   ├── sandbox
     ## │   ├── settings.dcf
+    ## │   ├── settings.json
     ## │   └── staging
     ## ├── renv.lock
     ## ├── smdi-manuscript.Rproj
