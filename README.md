@@ -15,6 +15,8 @@ More information about the package can be found under:
 
 -   .Rprofile - defines paths and activates `renv`, options for Posit R
     package manager
+-   manuscript - manuscript, bibliography, cover letter and meta files
+    to render to .docx format
 -   tables - main and supplementary tables (R objects and .docx format)
 -   figures - main and supplementary figures (R objects and .docx
     format)
