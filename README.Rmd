@@ -4,6 +4,8 @@ output: html_document
 date: "2023-07-24"
 ---
 
+# smdi: An R package to perform structural missing data investigations on partially observed confounders in real-world evidence studies
+
 ## Background
 
 This manuscript provides context and details about the smdi R package that was developed as a result of the findings of a comprehensive Sentinel Innovation Center project on `principled approaches on partially observed confounder data` in electronic health records.

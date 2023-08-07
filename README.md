@@ -1,3 +1,5 @@
+# smdi: An R package to perform structural missing data investigations on partially observed confounders in real-world evidence studies
+
 ## Background
 
 This manuscript provides context and details about the smdi R package
