@@ -97,7 +97,7 @@ Partially observed confounder data are a major challenge for the statistical ana
 
 **Materials and Methods**
 
-We developed the smdi (structural missing data diagnostics) R package based on results of a previous simulation study which considered structural assumptions of common missing data mechanisms in real-world data.
+We developed the smdi (structural missing data investigations) R package based on results of a previous simulation study which considered structural assumptions of common missing data mechanisms in EHR.
 
 **Results**
 
@@ -112,7 +112,7 @@ The smdi R package is freely available on CRAN and GitLab (<https://gitlab-scm.p
 ::: {.callout-tip icon="false"}
 ## Lay Summary
 
-As opposed to clinical trials, which are designed to collect data for research purposes in a harmonized manner, real-world data are typically generated for administrative purposes (e.g., health insurance claims for billing purposes) or clinical documentation (e.g., electronic health records). Hence, confounders and prognostic factors, which need to be balanced between treatment groups in real-world evidence studies, are usually not available for all patients at all necessary time points which leads to missing data. If the underlying missingness mechanisms of such factors is not at random, e.g., patients with higher levels of a prognostic biomarker are more likely to be missing, this can lead to bias in the resulting effect estimates for the studied treatments if common missing data analysis methods like complete case analysis or imputation are used. Hence, it is of utmost importance to investigate the potential patterns and mechanisms to know if assumptions for common analytic methods hold. Here, we present the smdi R package, which enables researchers to perform such principled missing data investigations on partially observed confounders. The smdi package implements functions to visualize and describe missing data and to infer potential missingness patterns and mechanisms based on available data.
+As opposed to clinical trials, which are designed to collect data for research purposes in a harmonized manner, real-world data are typically generated for administrative purposes (e.g., health insurance claims for billing purposes) or clinical documentation (e.g., electronic health records). Hence, confounders and prognostic factors, which need to be balanced between treatment groups in real-world evidence studies, are usually not available for all patients at all necessary time points which leads to missing data. If the underlying missingness mechanisms of such factors is not at random, e.g., patients with higher levels of a prognostic biomarker are more likely to have missing data, this can lead to bias in the resulting effect estimates for the studied treatments if common missing data analysis methods like complete case analysis or imputation are used. Hence, it is of utmost importance to investigate the potential patterns and mechanisms to know if assumptions for common analytic methods hold. Here, we present the smdi R package, which enables researchers to perform such principled missing data investigations on partially observed confounders. The smdi package implements functions to visualize and describe missing data and to infer potential missingness patterns and mechanisms based on available data.
 :::
 
 {{< pagebreak >}}
@@ -223,7 +223,7 @@ The function returns an object of class *smdi* containing a table with the resul
 
 # Discussion
 
-Missing data are ubiquitous in real-world databases and may lead to bias if not handled appropriately. We developed `smdi` to streamline routine diagnostics of missing data. By cross-checking the resulting diagnostic parameters to expected estimates ( @fig-results, [@weberpals2023]), the diagnostics can provide valuable insights into underlying missingness patterns and mechanisms and help elucidate if analytic approaches such as imputation analyses are viable options.
+Missing data are ubiquitous in EHR and may lead to bias if not handled appropriately. We developed `smdi` to streamline routine diagnostics of missing data. By cross-checking the resulting diagnostic parameters to expected estimates (@fig-results, [@weberpals2023]), the diagnostics can provide valuable insights into underlying missingness patterns and mechanisms and help elucidate if analytic approaches such as imputation analyses are viable options.
 
 The package also comes with limitations, such that the true underlying missingness generating mechanism can never be inferred with absolute certainty from the observed data. Hence, it's important to complement diagnostic results with substantive expert knowledge to factor in how covariates are measured in routine care processes and contextualize potential reasons for missingness.
 
