@@ -97,22 +97,22 @@ Partially observed confounder data are a major challenge for the statistical ana
 
 **Materials and Methods**
 
-We developed the smdi (structural missing data investigations) R package based on results of a previous simulation study which considered structural assumptions of common missing data mechanisms in EHR.
+We developed the `smdi` (structural missing data investigations) R package based on results of a previous simulation study which considered structural assumptions of common missing data mechanisms in EHR.
 
 **Results**
 
-smdi enables users to run principled missing data investigations on partially observed confounders and implements functions to visualize, describe and infer potential missingness patterns and mechanisms based on available data.
+`smdi` enables users to run principled missing data investigations on partially observed confounders and implements functions to visualize, describe and infer potential missingness patterns and mechanisms based on available data.
 
 **Conclusions**
 
-The smdi R package is freely available on CRAN and GitLab (<https://gitlab-scm.partners.org/janickweberpals/smdi>) and can give valuable insights into underlying missingness patterns and mechanisms and thereby help improve the robustness of real-world evidence studies.
+The `smdi` R package is freely available on CRAN and GitLab (<https://gitlab-scm.partners.org/janickweberpals/smdi>) and can give valuable insights into underlying missingness patterns and mechanisms and thereby help improve the robustness of real-world evidence studies.
 
 {{< pagebreak >}}
 
 ::: {.callout-tip icon="false"}
 ## Lay Summary
 
-As opposed to clinical trials, which are designed to collect data for research purposes in a harmonized manner, real-world data are typically generated for administrative purposes (e.g., health insurance claims for billing purposes) or clinical documentation (e.g., electronic health records). Hence, confounders and prognostic factors, which need to be balanced between treatment groups in real-world evidence studies, are usually not available for all patients at all necessary time points which leads to missing data. If the underlying missingness mechanisms of such factors is not at random, e.g., patients with higher levels of a prognostic biomarker are more likely to have missing data, this can lead to bias in the resulting effect estimates for the studied treatments if common missing data analysis methods like complete case analysis or imputation are used. Hence, it is of utmost importance to investigate the potential patterns and mechanisms to know if assumptions for common analytic methods hold. Here, we present the smdi R package, which enables researchers to perform such principled missing data investigations on partially observed confounders. The smdi package implements functions to visualize and describe missing data and to infer potential missingness patterns and mechanisms based on available data.
+As opposed to clinical trials, which are designed to collect data for research purposes in a harmonized manner, real-world data are typically generated for administrative purposes (e.g., health insurance claims for billing purposes) or clinical documentation (e.g., electronic health records). Hence, confounders and prognostic factors, which need to be balanced between treatment groups to infer causal treatment effects, are usually not available for all patients at all necessary time points which leads to missing data. If the underlying missingness mechanisms of such factors is not at random, e.g., patients with higher levels of a prognostic biomarker are more likely to have missing data, this can lead to bias in the resulting effect estimates for the studied treatments if common missing data analysis methods like complete case analysis or imputation are used. Hence, it is of utmost importance to investigate the potential patterns and mechanisms to know if assumptions for common analytic methods hold. Here, we present the `smdi` R package, which enables researchers to perform such principled missing data investigations on partially observed confounders. The `smdi` package implements functions to visualize and describe missing data and to infer potential missingness patterns and mechanisms based on available data.
 :::
 
 {{< pagebreak >}}
@@ -183,7 +183,7 @@ The `smdi_hotelling()` and `smdi_little()` functions complement the `smdi_asmd()
 
 #### Group 2 Diagnostics
 
-The group 2 diagnostics assesses the ability to predict missingness based on observed covariates via the `smdi_rf()` function. This function trains and fits a random forest classification model [@randomForest; @sondhi2023a] to predict the missing indicator of each POC given observed covariates as the predictors. If the resulting area under the receiver operating characteristic curve (AUC) is meaningfully higher than 0.5, this would give some evidence for MAR being the underlying missingness mechanism. In case of values close 0.5, this would rather indicate a random prediction and translate to a potential MCAR or MNAR mechanism.
+The group 2 diagnostics assesses the ability to predict missingness based on observed covariates via the `smdi_rf()` function. This function trains and fits a random forest classification model [@randomForest; @sondhi2023a] to predict the missing indicator of each POC given observed covariates as the predictors. If the resulting area under the receiver operating characteristic curve (AUC) is meaningfully higher than 0.5, this would give some evidence for MAR being the underlying missingness mechanism. In case of values close 0.5, this would indicate a random prediction and translate to a potential MCAR or MNAR mechanism.
 
 The function returns an object of class *rf* which generically prints an overview of the AUC value of each POC. The AUC is based on the prediction made in the respective test dataset which is sampled as part of the function and for which the train-test split ratio can be chosen by the user (`train_test_ratio` parameter). The *rf* object further returns a graph for each POC displaying the relative importance of the predictors in the training dataset expressed as the mean decrease in accuracy (example @fig-examples d). This metric can be valuable for interpreting and identifying strong predictors of missingness. It quantifies how much the accuracy of the prediction (i.e., the ratio of correct predictions to the total number of predictions made) would decrease if we excluded a specific predictor from the model. In case of inflated AUC values (\>0.9), the function prompts a message to the user reporting the most important predictor. If in such a scenario another POC is identified as a perfect predictor, the presence of a monotone missing data pattern may be likely in which case it is recommended to run the diagnostics for each POC independently rather than jointly.
 
