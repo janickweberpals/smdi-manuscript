@@ -136,11 +136,11 @@ In order to make an informed decision about the most appropriate analytic approa
 
 ### Mechanisms [@sondhi2023a]
 
--   **MCAR**: The missingness does not depend on any other observed or unobserved covariate(s).
+-   **Missing completely at random (MCAR)**: The missingness does not depend on any other observed or unobserved covariate(s).
 
--   **MAR**: The missingness depends and can be explained by other observed covariates.
+-   **Missing at random (MAR)**: The missingness depends and can be explained by other observed covariates.
 
--   **MNAR**: The missingness depends on unoberserved covariate(s). For example, the missingness may be explained by other covariate(s) which is/are not observed in the underlying dataset (MNAR~unmeasured~). The missingness can also just dependent on the actual value of the partially observed covariate itself (MNAR~value~).
+-   **Missing not at random (MNAR)**: The missingness depends on unoberserved covariate(s). For example, the missingness may be explained by other covariate(s) which is/are not observed in the underlying dataset (MNAR~unmeasured~). The missingness can also just dependent on the actual value of the partially observed covariate itself (MNAR~value~).
 :::
 
 In light of these limitations, we have recently developed and evaluated a principled approach combining multiple missing data diagnostics using an US EHR-claims database linkage [@weberpals2023]. The results of this large-scale study revealed that the combination of these diagnostics characterized missing data mechanisms well and provided helpful guidance for the appropriate choice of analytic methods to handle POC data (e.g., missing data imputation).
@@ -159,7 +159,7 @@ The `smdi` R package was written in R language (version 4.2.1). The package is a
 
 @fig-workflow illustrates the recommended workflow to systematically approach diagnostics on POCs.
 
-The workflow is generally categorized into descriptives, pattern diagnostics and inferential diagnostics on potentially underlying missingness mechanisms. In this section, we cover the principles behind the main package functions, a selection of parameters a user can specify, the returned results and how these results can be interpreted. Examples are illustrated using a simulated EHR dataset that is part of the package (more details under <https://janickweberpals.gitlab-pages.partners.org/smdi/articles/a_data_generation.html>).
+The workflow is generally categorized into descriptives, pattern diagnostics and inferential diagnostics on potentially underlying missingness mechanisms. In this section, we cover the principles behind the main package functions, a selection of parameters a user can specify, the returned results and how these results can be interpreted. Examples are illustrated using a synthetic EHR dataset that is part of the package and simulates an oncology cohort with a binary exposure, a time-to-event outcome and several confounders and prognostic covariates including three POCs (EGFR and PD-L1 \[biomarkers\] and ECOG \[performance score\]) following MCAR, MAR and MNAR mechanisms (more details under <https://janickweberpals.gitlab-pages.partners.org/smdi/articles/a_data_generation.html>).
 
 For all functions in the `smdi` package, a *dataframe* is expected (`data` parameter) as input with a format where one row represents one unique patient and the columns represent the variables relevant for the study, i.e., exposure, outcome, fully observed covariates and the POCs. Any non-informative columns, such as patient identifiers, date columns or zip codes should be dropped from the dataframe before calling the functions. Throughout all functions, the user has the option to specify a vector with the column name(s) of the POC(s) that should be investigated (`covar` parameter). If nothing is specified, all functions automatically consider any variable in the dataframe that exhibits at least one missing value.
 
@@ -183,7 +183,7 @@ The `smdi_hotelling()` and `smdi_little()` functions complement the `smdi_asmd()
 
 #### Group 2 Diagnostics
 
-The group 2 diagnostics assesses the ability to predict missingness based on observed covariates via the `smdi_rf()` function. This function trains and fits a random forest classification model [@randomForest; @sondhi2023a] to predict the missing indicator of each POC given observed covariates as the predictors. If the resulting area under the receiver operating characteristic curve (AUC) is meaningfully higher than 0.5, this would give some evidence for MAR being the underlying missingness mechanism. In case of values close 0.5, this would indicate a random prediction and translate to a potential MCAR or MNAR mechanism.
+The group 2 diagnostics assesses the ability to predict missingness based on observed covariates via the `smdi_rf()` function. This function trains and fits a random forest classification model [@randomForest; @sondhi2023a] to predict the missing indicator of each POC given observed covariates as the predictors. If the resulting area under the receiver operating characteristic curve (AUC) is meaningfully higher than 0.5, this would give some evidence for MAR being the underlying missingness mechanism. In case of values close 0.5, this would indicate the model is unable to discriminate missing vs. observed values based on available data; this could be due to a mechanism that is close to MCAR or one where the missingness is associated with unmeasured data (MNAR).
 
 The function returns an object of class *rf* which generically prints an overview of the AUC value of each POC. The AUC is based on the prediction made in the respective test dataset which is sampled as part of the function and for which the train-test split ratio can be chosen by the user (`train_test_ratio` parameter). The *rf* object further returns a graph for each POC displaying the relative importance of the predictors in the training dataset expressed as the mean decrease in accuracy (example @fig-examples d). This metric can be valuable for interpreting and identifying strong predictors of missingness. It quantifies how much the accuracy of the prediction (i.e., the ratio of correct predictions to the total number of predictions made) would decrease if we excluded a specific predictor from the model. In case of inflated AUC values (\>0.9), the function prompts a message to the user reporting the most important predictor. If in such a scenario another POC is identified as a perfect predictor, the presence of a monotone missing data pattern may be likely in which case it is recommended to run the diagnostics for each POC independently rather than jointly.
 
@@ -219,11 +219,13 @@ smdi_diagnose(
   smdi_style_gt()
 ```
 
-The function returns an object of class *smdi* containing a table with the results of all diagnostics for each specified POC and Little's test p-value across all covariates (**`r table_cap("tbl2", display = "cite")`**). The `smdi_style_gt()` function is an ancillary function that takes an object of class *smdi* and produces a formatted and publication-ready gt table [@gt] which can be seamlessly exported to different file formats (e.g., .docx, .pdf, etc.) for reports or manuscripts.
+The function returns an object of class *smdi* containing a table with the results of all diagnostics for each specified POC and Little's test p-value across all covariates (**`r table_cap("tbl2", display = "cite")`**). By cross-checking the resulting diagnostic parameters to expected estimates (@fig-results, [@weberpals2023]), the diagnostics can provide valuable insights into underlying missingness mechanisms and thereby help elucidate if analytic approaches such as imputation analyses are viable options.
+
+The `smdi_style_gt()` function is an ancillary function that takes an object of class *smdi* and produces a formatted and publication-ready gt table [@gt] which can be seamlessly exported to different file formats (e.g., .docx, .pdf, etc.) for reports or manuscripts.
 
 # Discussion
 
-Missing data are ubiquitous in EHR and may lead to bias if not handled appropriately. We developed `smdi` to streamline routine diagnostics of missing data. By cross-checking the resulting diagnostic parameters to expected estimates (@fig-results, [@weberpals2023]), the diagnostics can provide valuable insights into underlying missingness patterns and mechanisms and help elucidate if analytic approaches such as imputation analyses are viable options.
+Missing data are ubiquitous in EHR and may lead to bias if not handled appropriately. We developed `smdi` to streamline routine diagnostics of missing data.
 
 The package also comes with limitations, such that the true underlying missingness generating mechanism can never be inferred with absolute certainty from the observed data. Hence, it's important to complement diagnostic results with substantive expert knowledge to factor in how covariates are measured in routine care processes and contextualize potential reasons for missingness.
 
