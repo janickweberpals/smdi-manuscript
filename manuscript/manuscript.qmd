@@ -93,7 +93,7 @@ Email: [jweberpals\@bwh.harvard.edu](mailto:jweberpals@bwh.harvard.edu)
 
 **Objectives**
 
-Partially observed confounder data are a major challenge for the statistical analysis of electronic health records (EHR). While analytic approaches exist (e.g., multiple imputation), assumptions on underlying missingness patterns and mechanisms have to hold. We aimed to develop a toolkit to streamline missing data diagnostics to scrutinize if certain analytic approaches are viable options.
+Partially observed confounder data are a major challenge for the statistical analysis of electronic health records (EHR). While analytic approaches exist (e.g., multiple imputation), assumptions on underlying missingness patterns and mechanisms must hold. We aimed to develop a toolkit to streamline missing data diagnostics to scrutinize if certain analytic approaches are viable options.
 
 **Materials and Methods**
 
@@ -101,7 +101,7 @@ We developed the `smdi` (structural missing data investigations) R package based
 
 **Results**
 
-`smdi` enables users to run principled missing data investigations on partially observed confounders and implements functions to visualize, describe and infer potential missingness patterns and mechanisms based on available data.
+`smdi` enables users to run principled missing data investigations on partially observed confounders and implements functions to visualize, describe, and infer potential missingness patterns and mechanisms based on available data.
 
 **Conclusions**
 
@@ -119,9 +119,9 @@ As opposed to clinical trials, which are designed to collect data for research p
 
 # Background and Significance
 
-Electronic health records (EHR) are increasingly used to conduct real-world evidence (RWE) studies to complement evidence coming from randomized controlled trials (RCTs) [@fdaRWE2018; @Desai2021]. Due to their detailed capture of clinical parameters such as vital signs, lab measurements, physician assessments and lifestyle factors, EHRs can significantly improve the ability to control for confounding and imbalances in prognostic factors between treatment groups, especially when linked to administrative claims databases [@asfaw2022]. However, such prognostic factors are often just partially observed which challenges the statistical analysis of the data and can result in severe bias when predicting or estimating treatment effects if not handled appropriately [@gorelick2006; @ayilara2019; @groenwold2020].
+Electronic health records (EHR) are increasingly used to conduct real-world evidence (RWE) studies to complement evidence from randomized controlled trials (RCTs) [@fdaRWE2018; @Desai2021]. Due to their detailed capture of clinical parameters such as vital signs, lab measurements, physician assessments, and lifestyle factors, EHRs can significantly improve the ability to control for imbalances in prognostic factors between treatment groups, especially when linked to administrative claims databases [@asfaw2022]. However, such prognostic factors are often partially observed which challenges the statistical analysis and can result in severe bias when predicting or estimating treatment effects if not handled appropriately [@gorelick2006; @ayilara2019; @groenwold2020].
 
-In order to make an informed decision about the most appropriate analytic approach, it is crucial to investigate and understand the potential patterns and mechanisms that underlie the partially observed confounder (POC) data (see definitions box) [@vanbuuren2018; @rubin1976; @little2019]. Usually these are not known for a given RWE study but general guidance papers and frameworks have suggested various routine diagnostics to investigate missing data patterns and mechanisms. These methods comprise standard procedures such as comparing baseline characteristics and outcomes between patients with and without the POC [@lee2021; @sondhi2023a; @hotelling1931; @little1988; @pedersen2017], checking the ability to predict missingness [@sondhi2023a] and assessing if causal relationships between variables and their missingness are recoverable based on available data [@madley-dowd2019] using directed acyclic graphs [@Lee2023; @Moreno-Betancur2018] or M-graphs [@mohan2021]. However, these methods have so far been only described and tested in isolation from each other and no principled approach exists. In addition, the practical implementation of such diagnostics is time-consuming, tedious and consequently not often performed [@carroll2020; @wood2004; @harel2012].
+In order to make an informed decision about the most appropriate analytic approach, it is crucial to investigate the potential patterns and mechanisms that underlie the partially observed confounder (POC) data (see definitions box) [@vanbuuren2018; @rubin1976; @little2019]. Usually these are not known for a given RWE study, but general guidance frameworks have suggested various routine diagnostics to investigate missing data patterns and mechanisms. These methods comprise standard procedures such as comparing baseline characteristics and outcomes between patients with and without the POC [@lee2021; @sondhi2023a; @hotelling1931; @little1988; @pedersen2017], checking the ability to predict missingness [@sondhi2023a] and assessing if causal relationships between variables and their missingness are recoverable based on available data [@madley-dowd2019] using directed acyclic graphs [@Lee2023; @Moreno-Betancur2018] or M-graphs [@mohan2021]. However, these methods have so far been only described and tested in isolation from each other and no principled approach exists. In addition, the practical implementation of such diagnostics is time-consuming, tedious and consequently not often performed [@carroll2020; @wood2004; @harel2012].
 
 {{< pagebreak >}}
 
@@ -143,15 +143,15 @@ In order to make an informed decision about the most appropriate analytic approa
 -   **Missing not at random (MNAR)**: The missingness depends on unoberserved covariate(s). For example, the missingness may be explained by other covariate(s) which is/are not observed in the underlying dataset (MNAR~unmeasured~). The missingness can also just dependent on the actual value of the partially observed covariate itself (MNAR~value~).
 :::
 
-In light of these limitations, we have recently developed and evaluated a principled approach combining multiple missing data diagnostics using an US EHR-claims database linkage [@weberpals2023]. The results of this large-scale study revealed that the combination of these diagnostics characterized missing data mechanisms well and provided helpful guidance for the appropriate choice of analytic methods to handle POC data (e.g., missing data imputation).
+Given these limitations, we have recently developed and evaluated a principled approach combining multiple missing data diagnostics using an US EHR-claims database linkage [@weberpals2023]. The results of this large-scale study revealed that the combination of these diagnostics characterized missing data mechanisms well and provided helpful guidance for the appropriate choice of analytic methods to handle POC data (e.g., missing data imputation).
 
 # Objective
 
-To streamline and ease the implementation of these routine missing data diagnostics for POC data in RWE studies, we developed the `smdi` (structural missing data investigations) R package [@smdi].
+To streamline implementation of routine missing data diagnostics for POC data in RWE studies, we developed the `smdi` (structural missing data investigations) R package [@smdi].
 
 # Materials and Methods
 
-The `smdi` R package was written in R language (version 4.2.1). The package is available on CRAN (<https://cran.r-project.org/web/packages/smdi>) and GitLab (<https://gitlab-scm.partners.org/janickweberpals/smdi>) and can be installed via `install.packages("smdi")`. To ensure the quality and robustness of the package, we implemented comprehensive unit tests with a coverage of 95.81% and established automated R CMD checks [@wickham2023r] via continuous integration and deployment. Additional resources such as documentation and vignettes are provided on the package website under <https://janickweberpals.gitlab-pages.partners.org/smdi>.
+The `smdi` R package was written in R language (version 4.2.1). The package is available on CRAN (<https://cran.r-project.org/web/packages/smdi>) and GitLab (<https://gitlab-scm.partners.org/janickweberpals/smdi>) and can be installed via `install.packages("smdi")`. To ensure quality, we implemented comprehensive unit tests with a coverage of 95.81% and established automated R CMD checks [@wickham2023r] via continuous integration and deployment. Additional resources such as documentation and vignettes are provided on the package website: <https://janickweberpals.gitlab-pages.partners.org/smdi>.
 
 # Results {#sec-results}
 
@@ -159,9 +159,9 @@ The `smdi` R package was written in R language (version 4.2.1). The package is a
 
 @fig-workflow illustrates the recommended workflow to systematically approach diagnostics on POCs.
 
-The workflow is generally categorized into descriptives, pattern diagnostics and inferential diagnostics on potentially underlying missingness mechanisms. In this section, we cover the principles behind the main package functions, a selection of parameters a user can specify, the returned results and how these results can be interpreted. Examples are illustrated using a synthetic EHR dataset that is part of the package and simulates an oncology cohort with a binary exposure, a time-to-event outcome and several confounders and prognostic covariates including three POCs (EGFR and PD-L1 \[biomarkers\] and ECOG \[performance score\]) following MCAR, MAR and MNAR mechanisms (more details under <https://janickweberpals.gitlab-pages.partners.org/smdi/articles/a_data_generation.html>).
+The workflow is generally categorized into descriptives, pattern diagnostics, and inferential diagnostics on potentially underlying missingness mechanisms. In this section, we cover the principles behind the main package functions, a selection of parameters users can specify, the returned results and how these results can be interpreted. Examples are illustrated using a synthetic dataset that is part of the package and simulates an oncology cohort with a binary exposure, a time-to-event outcome and several confounders and prognostic covariates including three POCs (EGFR and PD-L1 \[biomarkers\] and ECOG \[performance score\]) following MCAR, MAR and MNAR mechanisms (more details under <https://janickweberpals.gitlab-pages.partners.org/smdi/articles/a_data_generation.html>).
 
-For all functions in the `smdi` package, a *dataframe* is expected (`data` parameter) as input with a format where one row represents one unique patient and the columns represent the variables relevant for the study, i.e., exposure, outcome, fully observed covariates and the POCs. Any non-informative columns, such as patient identifiers, date columns or zip codes should be dropped from the dataframe before calling the functions. Throughout all functions, the user has the option to specify a vector with the column name(s) of the POC(s) that should be investigated (`covar` parameter). If nothing is specified, all functions automatically consider any variable in the dataframe that exhibits at least one missing value.
+For all functions in the `smdi` package, a *dataframe* is expected (`data` parameter) as input with a format where one row represents one unique patient and the columns represent relevant variables, i.e., exposure, outcome, fully observed covariates and the POCs. Any non-informative columns, such as patient identifiers, date columns, or zip codes should be dropped from the dataframe before calling the functions. Throughout all functions, the user has the option to specify a vector with the column name(s) of the POC(s) that should be investigated (`covar` parameter). If nothing is specified, all functions automatically consider any variable in the dataframe that exhibits at least one missing value.
 
 ### Descriptives and Pattern Diagnostics
 
@@ -177,13 +177,13 @@ The core functions to infer potentially underlying missingness mechanisms are ca
 
 The aim of the `smdi_asmd()`, `smdi_hotelling()` and `smdi_little()` functions is to explore dissimilarities in patient characteristics between those with and without observed values for the POC. According to Rubin's framework [@rubin1976], when missingness is at random (MAR), it can be explained by observed covariates. Consequently, significant differences in patient characteristics would be expected under a MAR mechanism between strata of patients with and without the POC. If the missingness depends only on unobserved factors (missing not at random \[MNAR\]) or does not depend on either observed or unobserved covariates (missing completely at random \[MCAR\]), differences should not be observable.
 
-To quantify such differences, the `smdi_asmd()` function computes absolute standardized mean differences (ASMD) of observed patient characteristics [@schober2019; @austin2011; @tableone]. The function returns an *asmd* object which displays an aggregated summary of the average or median ASMD along with a corresponding range of minimum and maximum AMSDs for each POC, respectivley. The object also returns a detailed 'Table 1' for each POC displaying the distributions of observed patient characteristics and resulting ASMDs between patients with and without an observed value for the POC. For a graphical visualization of this, the function returns a plot for each POC illustrating the ASMD for each compared patient characteristic (example @fig-examples c) [@ggplot2].
+To quantify such differences, the `smdi_asmd()` function computes absolute standardized mean differences (ASMD) of observed patient characteristics [@schober2019; @austin2011; @tableone]. The function returns an *asmd* object which displays an aggregated summary of the average or median ASMD along with a corresponding range of minimum and maximum AMSDs for each POC, respectivley. The object also returns a detailed 'Table 1' for each POC displaying the distributions of observed patient characteristics and resulting ASMDs between patients with and without an observed value for the POC. The function returns a plot for each POC illustrating the ASMD for each compared patient characteristic as a graphical visualization (example @fig-examples c) [@ggplot2].
 
-The `smdi_hotelling()` and `smdi_little()` functions complement the `smdi_asmd()` function by examining the differences in patient characteristics as a formal statistical hypothesis test. Hotelling's test [@hotelling1931; @Hotelling] formalizes this as a multivariate t-test, which means that `smdi_hotelling()` returns a test statistic and p-value for each POC. In contrast, `smdi_little()` [@little1988; @naniar] computes a single global chi-square test statistic and p-value across all POCs with the null hypothesis that the data is (globally) MCAR.
+The `smdi_hotelling()` and `smdi_little()` functions complement the `smdi_asmd()` function by examining differences in patient characteristics as a formal statistical hypothesis test. Hotelling's test [@hotelling1931; @Hotelling] formalizes this as a multivariate t-test, which means that `smdi_hotelling()` returns a test statistic and p-value for each POC. In contrast, `smdi_little()` [@little1988; @naniar] computes a single global chi-square test statistic and p-value across all POCs with the null hypothesis that the data is (globally) MCAR.
 
 #### Group 2 Diagnostics
 
-The group 2 diagnostics assesses the ability to predict missingness based on observed covariates via the `smdi_rf()` function. This function trains and fits a random forest classification model [@randomForest; @sondhi2023a] to predict the missing indicator of each POC given observed covariates as the predictors. If the resulting area under the receiver operating characteristic curve (AUC) is meaningfully higher than 0.5, this would give some evidence for MAR being the underlying missingness mechanism. In case of values close 0.5, this would indicate the model is unable to discriminate missing vs. observed values based on available data; this could be due to a mechanism that is close to MCAR or one where the missingness is associated with unmeasured data (MNAR).
+The group 2 diagnostics assess the ability to predict missingness based on observed covariates via the `smdi_rf()` function. This function trains and fits a random forest classification model [@randomForest; @sondhi2023a] to predict the missing indicator of each POC given observed covariates as the predictors. If the resulting area under the receiver operating characteristic curve (AUC) is meaningfully higher than 0.5, this would give some evidence for MAR being the underlying missingness mechanism. In case of values close 0.5, this would indicate the model is unable to discriminate missing vs. observed values based on available data; this could be due to a mechanism that is close to MCAR or one where the missingness is associated with unmeasured data (MNAR).
 
 The function returns an object of class *rf* which generically prints an overview of the AUC value of each POC. The AUC is based on the prediction made in the respective test dataset which is sampled as part of the function and for which the train-test split ratio can be chosen by the user (`train_test_ratio` parameter). The *rf* object further returns a graph for each POC displaying the relative importance of the predictors in the training dataset expressed as the mean decrease in accuracy (example @fig-examples d). This metric can be valuable for interpreting and identifying strong predictors of missingness. It quantifies how much the accuracy of the prediction (i.e., the ratio of correct predictions to the total number of predictions made) would decrease if we excluded a specific predictor from the model. In case of inflated AUC values (\>0.9), the function prompts a message to the user reporting the most important predictor. If in such a scenario another POC is identified as a perfect predictor, the presence of a monotone missing data pattern may be likely in which case it is recommended to run the diagnostics for each POC independently rather than jointly.
 
@@ -196,13 +196,13 @@ To tune the random forest model hyperparameters, the `smdi_rf()` function has a 
 ```
 #### Group 3 Diagnostics
 
-The third group diagnostics with the `smdi_outcome()` function examines the association of the missingness indicator of the POC and the outcome under study. The function will compute both a univariate model and a model adjusted for all other covariates included in the dataset. In preceding simulations, we discerned distinct patterns in both univariate and adjusted associations between the missing indicator and the outcome, closely mirroring simulated missingness mechanisms [@weberpals2023]. As one would expect, under a MCAR mechanism there was no difference in the outcome between patients with and without a value for the POC. Under MAR, given that missingness can be explained by observed covariates, a spurious association in the univariate model disappeared after adjustment. If the missingness followed any MNAR mechanism, an association was observed regardless of adjustment.
+The third group of diagnostics with the `smdi_outcome()` function examines the association of the missingness indicator of the POC and the outcome under study. The function computes both a univariate model and a model adjusted for all other covariates in the dataset. In preceding simulations, we discerned distinct patterns in both univariate and adjusted associations between the missing indicator and the outcome, closely mirroring simulated missingness mechanisms [@weberpals2023]. As one would expect, under a MCAR mechanism there was no difference in the outcome between patients with and without a value for the POC. Under MAR, given that missingness can be explained by observed covariates, a spurious association in the univariate model disappeared after adjustment. If the missingness followed any MNAR mechanism, an association was observed regardless of adjustment.
 
 Currently, `smdi_outcome()` supports three outcome regression types: linear regression (*lm* [@stats]) for continuous outcomes, logistic regression (*glm* [@stats]) for binary outcomes and a Cox proportional hazards model (*coxph* [@survival]) for time-to-event outcomes. Besides the the regression type (`model` parameter), a user needs to specify the column name containing the outcome using the `form_lhs` parameter (e.g., `Surv(eventtime, status)` in case of a Cox model). The function returns a table with univariate and adjusted beta coefficients and 95% confidence intervals for each POC.
 
 #### `smdi_diagnose()` to compute all three group diagnostics
 
-Finally, the `smdi_diagnose()` function enables a user to compute all three group diagnostics with just one function call.
+Finally, the `smdi_diagnose()` function enables users to compute all three group diagnostics with a single function call.
 
 ```{r}
 #| eval: false
@@ -211,10 +211,9 @@ Finally, the `smdi_diagnose()` function enables a user to compute all three grou
 # minimal example of a smdi_diagnose() function call
 smdi_diagnose(
   data = smdi_data,
-  covar = NULL, # NULL includes all covariates with at least one NA
   model = "cox",
   form_lhs = "Surv(eventtime, status)",
-  n_cores = 3 # number of cores to parallelize computations on
+  n_cores = 3
   ) %>% 
   smdi_style_gt()
 ```
@@ -227,11 +226,11 @@ The `smdi_style_gt()` function is an ancillary function that takes an object of 
 
 Missing data are ubiquitous in EHR and may lead to bias if not handled appropriately. We developed `smdi` to streamline routine diagnostics of missing data.
 
-The package also comes with limitations, such that the true underlying missingness generating mechanism can never be inferred with absolute certainty from the observed data. Hence, it's important to complement diagnostic results with substantive expert knowledge to factor in how covariates are measured in routine care processes and contextualize potential reasons for missingness.
+The package also has limitations, such that the true underlying missingness generating mechanism can never be inferred with absolute certainty from the observed data. Hence, it's important to complement diagnostic results with substantive expert knowledge to factor in how covariates are measured in routine care and contextualize potential reasons for missingness.
 
 ## Conclusions
 
-The smdi package is a powerful and convenient tool to implement and carry out principled routine missing data diagnostics in RWE studies. This will improve the robustness of studies involving POCs by helping elucidate if certain analytic approaches are viable options for a given dataset.
+The smdi package is a powerful and convenient tool to implement principled routine missing data diagnostics in RWE studies. This will improve the robustness of studies involving POCs by elucidating if certain analytic approaches are viable for a given dataset.
 
 {{< pagebreak >}}
 
