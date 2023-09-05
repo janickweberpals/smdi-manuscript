@@ -33,19 +33,21 @@ library(ggimage)
 table_cap <- captioner(prefix = "Table")
 ```
 
-**Authors**: Janick Weberpals^1^, Sudha R. Raman^2^, Pamela A. Shaw^3^, Hana Lee^4^, Bradley G. Hammill^2^, Sengwee Toh^5^, John G. Connolly^5^, Kimberly J. Dandreo^5^, Fang Tian^4^, Wei Liu^4^, Jie Li^4^, José J. Hernández-Muñoz^4^, Robert J. Glynn^1^, Rishi J. Desai^1^
+**Authors**: Janick Weberpals^1^, Sudha R. Raman^2^, Pamela A. Shaw^3^, Hana Lee^4^, Bradley G. Hammill^2^, Sengwee Toh^5^, John G. Connolly^5^, Kimberly J. Dandreo^5^, Fang Tian^6^, Wei Liu^6^, Jie Li^6^, José J. Hernández-Muñoz^6^, Robert J. Glynn^1^, Rishi J. Desai^1^
 
 [Author affiliations:]{.underline}
 
-^1^Division of Pharmacoepidemiology and Pharmacoeconomics, Department of Medicine, Brigham and Women's Hospital, Harvard Medical School, Boston, MA
+^1^ Division of Pharmacoepidemiology and Pharmacoeconomics, Department of Medicine, Brigham and Women's Hospital, Harvard Medical School, Boston, MA
 
-^2^Department of Population Health Sciences, Duke University School of Medicine, Durham, NC
+^2^ Department of Population Health Sciences, Duke University School of Medicine, Durham, NC
 
-^3^Biostatistics Division, Kaiser Permanente Washington Health Research Institute, Seattle, WA
+^3^ Biostatistics Division, Kaiser Permanente Washington Health Research Institute, Seattle, WA
 
-^4^Center for Drug Evaluation and Research, Food and Drug Administration, Silver Spring, MD
+^4^ Office of Biostatistics, Center for Drug Evaluation and Research, US Food and Drug Administration, Silver Spring, MD
 
-^5^Department of Population Medicine, Harvard Medical School and Harvard Pilgrim Health Care Institute, Boston, MA
+^5^ Department of Population Medicine, Harvard Medical School and Harvard Pilgrim Health Care Institute, Boston, MA
+
+^6^ Office of Surveillance and Epidemiology, Center for Drug Evaluation and Research, US Food and Drug Administration, Silver Spring, MD
 
 [**Correspondence:**]{.underline}
 
@@ -65,7 +67,7 @@ Email: [jweberpals\@bwh.harvard.edu](mailto:jweberpals@bwh.harvard.edu)
 
 [**Article type:**]{.underline} Application Note
 
-[**Word count:**]{.underline} 1,969 words/2,000 words
+[**Word count:**]{.underline} 1,970 words/2,000 words
 
 [**Tables:**]{.underline} 2/2
 
@@ -101,7 +103,7 @@ We developed the `smdi` (structural missing data investigations) R package based
 
 **Results**
 
-`smdi` enables users to run principled missing data investigations on partially observed confounders and implements functions to visualize, describe, and infer potential missingness patterns and mechanisms based on available data.
+`smdi` enables users to run principled missing data investigations on partially observed confounders and implement functions to visualize, describe, and infer potential missingness patterns and mechanisms based on observed data.
 
 **Conclusions**
 
@@ -112,7 +114,7 @@ The `smdi` R package is freely available on CRAN and GitLab (<https://gitlab-scm
 ::: {.callout-tip icon="false"}
 ## Lay Summary
 
-As opposed to clinical trials, which are designed to collect data for research purposes in a harmonized manner, real-world data are typically generated for administrative purposes (e.g., health insurance claims for billing purposes) or clinical documentation (e.g., electronic health records). Hence, confounders and prognostic factors, which need to be balanced between treatment groups to infer causal treatment effects, are usually not available for all patients at all necessary time points which leads to missing data. If the underlying missingness mechanisms of such factors is not at random, e.g., patients with higher levels of a prognostic biomarker are more likely to have missing data, this can lead to bias in the resulting effect estimates for the studied treatments if common missing data analysis methods like complete case analysis or imputation are used. Hence, it is of utmost importance to investigate the potential patterns and mechanisms to know if assumptions for common analytic methods hold. Here, we present the `smdi` R package, which enables researchers to perform such principled missing data investigations on partially observed confounders. The `smdi` package implements functions to visualize and describe missing data and to infer potential missingness patterns and mechanisms based on available data.
+As opposed to clinical trials, which are designed to collect data for research purposes in a harmonized manner, real-world data are typically generated for administrative purposes (e.g., health insurance claims for billing purposes) or clinical documentation (e.g., electronic health records). Hence, confounders and prognostic factors, which need to be balanced between treatment groups to infer causal treatment effects, are usually not available for all patients at all necessary time points which leads to missing data. If the underlying missingness mechanisms of such factors is not at random, e.g., patients with higher levels of a prognostic biomarker are more likely to have missing data, this can lead to bias in the resulting effect estimates for the studied treatments if common missing data analysis methods like complete case analysis or imputation are used. Hence, it is of utmost importance to investigate the potential patterns and mechanisms to know if assumptions for common analytic methods hold. Here, we present the `smdi` R package, which enables researchers to perform such principled missing data investigations on partially observed confounders. The `smdi` package implements functions to visualize and describe missing data and to infer potential missingness patterns and mechanisms based on observed data.
 :::
 
 {{< pagebreak >}}
@@ -159,7 +161,7 @@ The `smdi` R package was written in R language (version 4.2.1). The package is a
 
 @fig-workflow illustrates the recommended workflow to systematically approach diagnostics on POCs.
 
-The workflow is generally categorized into descriptives, pattern diagnostics, and inferential diagnostics on potentially underlying missingness mechanisms. In this section, we cover the principles behind the main package functions, a selection of parameters users can specify, the returned results and how these can be interpreted. Examples are illustrated using a synthetic dataset that is part of the package and simulates an oncology cohort with a binary exposure, a time-to-event outcome and several confounders and prognostic covariates including three POCs (EGFR and PD-L1 \[biomarkers\] and ECOG \[performance score\]) following MCAR, MAR and MNAR mechanisms (more details: <https://janickweberpals.gitlab-pages.partners.org/smdi/articles/a_data_generation.html>).
+The workflow is generally categorized into descriptives, pattern diagnostics, and inferential diagnostics on potentially underlying missingness mechanisms. In this section, we cover the principles behind the main package functions, a selection of parameters users can specify, the returned results and how these can be interpreted. Examples are illustrated using a synthetic dataset that is part of the package and simulates an oncology cohort with a binary exposure, a time-to-event outcome and several baseline confounders and prognostic covariates including three POCs (EGFR and PD-L1 \[biomarkers\] and ECOG \[performance score\]) following MCAR, MAR and MNAR mechanisms (more details: <https://janickweberpals.gitlab-pages.partners.org/smdi/articles/a_data_generation.html>).
 
 For all functions in the `smdi` package, a *dataframe* is expected (`data` parameter) as input with a format where one row represents one unique patient and the columns represent relevant variables, i.e., exposure, outcome, fully observed covariates and the POCs. Any non-informative columns, such as patient identifiers, date columns, or zip codes should be dropped from the dataframe before calling the functions. Throughout all functions, users have the option to specify a vector with the column name(s) of the POC(s) that should be investigated (`covar` parameter). If nothing is specified, all functions automatically consider any variable in the dataframe that exhibits at least one missing value.
 
