@@ -67,7 +67,7 @@ Email: [jweberpals\@bwh.harvard.edu](mailto:jweberpals@bwh.harvard.edu)
 
 [**Article type:**]{.underline} Application Note
 
-[**Word count:**]{.underline} 1,997 words/2,000 words
+[**Word count:**]{.underline} 1,986 words/2,000 words
 
 [**Tables:**]{.underline} 2/2
 
@@ -95,7 +95,7 @@ Email: [jweberpals\@bwh.harvard.edu](mailto:jweberpals@bwh.harvard.edu)
 
 **Objectives**
 
-Partially observed confounder data pose a major challenge when conducting causal inference and statistical analyses using electronic health records (EHR). While analytic approaches such as multiple imputation are available, assumptions on underlying missingness patterns and mechanisms must hold. We aimed to develop a toolkit to streamline missing data diagnostics to scrutinize if certain analytic approaches are viable options.
+Partially observed confounder data pose a major challenge in statistical analyses aimed to inform causal inference using electronic health records (EHR). While analytic approaches such as imputation are available, assumptions on underlying missingness patterns and mechanisms must be verified. We aimed to develop a toolkit to streamline missing data diagnostics to guide choice of analytic approaches based on meeting necessary assumptions.
 
 **Materials and Methods**
 
@@ -107,23 +107,23 @@ We developed the `smdi` (structural missing data investigations) R package based
 
 **Conclusions**
 
-The `smdi` R package is freely available on CRAN and GitLab (<https://gitlab-scm.partners.org/janickweberpals/smdi>) and can provide valuable insights into underlying missingness patterns and mechanisms and thereby help improve the robustness of real-world evidence studies.
+The `smdi` R package is freely available on CRAN and can provide valuable insights into underlying missingness patterns and mechanisms and thereby help improve the robustness of real-world evidence studies.
 
 {{< pagebreak >}}
 
 ::: {.callout-tip icon="false"}
 ## Lay Summary
 
-Contrary to clinical trials, which are designed to collect data for research purposes in a harmonized manner, real-world data are typically generated for administrative (e.g., health insurance claims for billing purposes) or clinical documentation (e.g., electronic health records) purposes. Hence, confounders and prognostic factors, which need to be balanced between treatment groups to infer causal treatment effects, are often unavailable for all patients at all necessary time points, resulting in missing data. If the underlying missingness mechanisms of such factors are not observed, for example, if patients with higher levels of a prognostic biomarker are more likely to have missing data for that biomarker, it can introduce bias into the resulting effect estimates for the studied treatments when common missing data analysis methods like complete case analysis or imputation are applied. Therefore, it is of utmost importance to investigate potential missingness patterns and mechanisms to determine if assumptions for common analytic methods hold. Here, we present the `smdi` R package, which enables researchers to conduct such principled missing data investigations on partially observed confounders. The `smdi` package implements functions to visualize and describe missing data and to infer potential missingness patterns and mechanisms based on observed data.
+Contrary to clinical trials, which are designed to collect data for research purposes in a harmonized manner, real-world data are typically generated for administrative (e.g., health insurance claims for billing purposes) or clinical documentation (e.g., electronic health records) purposes. Hence, confounders and prognostic factors, which need to be balanced between treatment groups to infer causal treatment effects, are often unavailable for all patients at all necessary time points, resulting in missing data. It is of utmost importance to investigate potential missingness patterns and mechanisms to determine if assumptions for common analytic methods such as complete case analysis or imputations hold to avoid bias in resulting treatment effect estimates. Here, we present the `smdi` R package, which enables researchers to conduct such principled missing data investigations on partially observed confounders. The `smdi` package implements functions to visualize and describe missing data and to infer potential missingness patterns and mechanisms based on observed data.
 :::
 
 {{< pagebreak >}}
 
 # Background and Significance
 
-Electronic health records (EHR) are increasingly used to generate real-world evidence (RWE) to complement data from randomized controlled trials (RCTs) [@fdaRWE2018; @Desai2021]. Due to their comprehensive capture of clinical parameters, EHRs can significantly improve the ability to mitigate imbalances in prognostic factors between treatment groups, especially when linked to administrative claims databases [@asfaw2022]. However, such prognostic factors are often partially observed, posing a challenge to statistical analysis and potentially leading to severe bias in treatment effect estimates if not handled appropriately [@gorelick2006; @ayilara2019; @groenwold2020].
+Electronic health records (EHR) are increasingly used to generate real-world evidence (RWE) to complement data from randomized controlled trials (RCTs) [@fdaRWE2018; @Desai2021]. Due to their comprehensive capture of clinical details, EHRs can significantly improve the ability to mitigate imbalances in prognostic factors between treatment groups, especially when linked to administrative claims databases [@asfaw2022]. However, such prognostic factors are often partially observed, posing a challenge to statistical analysis and potentially leading to severe bias in treatment effect estimates if not handled appropriately [@gorelick2006; @ayilara2019; @groenwold2020].
 
-In order to make informed decisions about the most appropriate analytic approach, it is crucial to investigate the potential patterns and mechanisms that underlie the partially observed confounder (POC) data (see definitions box) [@vanbuuren2018; @rubin1976; @little2019]. Usually these are not known for a given RWE study, but guidance frameworks have suggested various routine diagnostics to investigate missing data patterns and mechanisms. These methods comprise standard procedures such as comparing baseline characteristics and outcomes between patients with and without the POC [@lee2021; @sondhi2023a; @hotelling1931; @little1988; @pedersen2017], checking the ability to predict missingness [@sondhi2023a] and assessing if causal relationships between variables and their missingness are recoverable based on available data [@madley-dowd2019] using directed acyclic graphs [@Lee2023; @Moreno-Betancur2018] or M-graphs [@mohan2021]. However, these methods have so far only been described and tested in isolation from each other and no unified principled approach exists. In addition, the practical implementation of such diagnostics is time-consuming, tedious and consequently infrequently performed [@carroll2020; @wood2004; @harel2012].
+In order to make informed decisions about the most appropriate analytic approach, it is crucial to investigate the potential patterns and mechanisms that underlie the partially observed confounder (POC) data (see definitions box) [@vanbuuren2018; @rubin1976; @little2019]. Existing guidance frameworks have suggested various routine diagnostics to investigate missing data patterns and mechanisms. These methods comprise standard procedures such as comparing baseline characteristics and outcomes between patients with and without the POC [@lee2021; @sondhi2023a; @hotelling1931; @little1988; @pedersen2017], checking the ability to predict missingness [@sondhi2023a] and assessing if causal relationships between variables and their missingness are recoverable based on available data [@madley-dowd2019] using directed acyclic graphs [@Lee2023; @Moreno-Betancur2018] or M-graphs [@mohan2021]. However, these methods have so far only been described and tested in isolation from each other and no unified principled approach exists. In addition, the practical implementation of such diagnostics is time-consuming, tedious and consequently infrequently performed [@carroll2020; @wood2004; @harel2012].
 
 {{< pagebreak >}}
 
@@ -145,7 +145,7 @@ In order to make informed decisions about the most appropriate analytic approach
 -   **Missing not at random (MNAR)**: The missingness depends on unoberserved covariate(s). For example, the missingness may be explained by other covariate(s) which is/are not observed in the underlying dataset (MNAR~unmeasured~). The missingness can also just dependent on the actual value of the partially observed covariate itself (MNAR~value~).
 :::
 
-Considering these limitations, we have recently developed and evaluated a principled approach combining multiple missing data diagnostics using an US EHR-claims database linkage [@weberpals2023]. The results of this large-scale study revealed that the combination of these diagnostics effectively characterized missing data mechanisms and provided helpful guidance for the choice of appropriate analytic methods to handle POC data.
+Considering these limitations, we have recently developed and evaluated a principled approach combining multiple missing data diagnostics using an US EHR-claims database linkage [@weberpals2023]. The results of this large-scale study revealed that the combination of these diagnostics effectively identified underlying mechanisms and provided helpful guidance for the choice of appropriate analytic methods to handle POC data.
 
 # Objective
 
