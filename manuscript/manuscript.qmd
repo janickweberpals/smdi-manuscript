@@ -33,7 +33,7 @@ library(ggimage)
 table_cap <- captioner(prefix = "Table")
 ```
 
-**Authors**: Janick Weberpals^1^, Sudha R. Raman^2^, Pamela A. Shaw^3^, Hana Lee^4^, Bradley G. Hammill^2^, Sengwee Toh^5^, John G. Connolly^5^, Kimberly J. Dandreo^5^, Fang Tian^6^, Wei Liu^6^, Jie Li^6^, José J. Hernández-Muñoz^6^, Robert J. Glynn^1^, Rishi J. Desai^1^
+**Authors**: Janick Weberpals^1^, RPh, PhD, Sudha R. Raman^2^, PhD, Pamela A. Shaw^3^, PhD, MS, Hana Lee^4^, PhD, Bradley G. Hammill^2^, DrPH, Sengwee Toh^5^, ScD, John G. Connolly^5^, ScD, Kimberly J. Dandreo^5^, MS, Fang Tian^6^, PhD, Wei Liu^6^, PhD, Jie Li^6^, PhD, José J. Hernández-Muñoz^6^, PhD, Robert J. Glynn^1^, PhD, ScD, Rishi J. Desai^1^, PhD
 
 [Author affiliations:]{.underline}
 
