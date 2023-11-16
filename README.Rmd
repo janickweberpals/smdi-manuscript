@@ -1,7 +1,7 @@
 ---
 title: "README"
 output: html_document
-date: "2023-07-24"
+date: "`r Sys.Date()`"
 ---
 
 # smdi: An R package to perform structural missing data investigations on partially observed confounders in real-world evidence studies
