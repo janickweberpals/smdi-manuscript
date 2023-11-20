@@ -1,0 +1,175 @@
+---
+title: "Supplementary Material"
+subtitle: "smdi: An R package to perform structural missing data investigations on partially observed confounders in real-world evidence studies"
+
+echo: false
+number-sections: true
+
+format: 
+  pdf:
+    fig-cap-location: top
+    crossref:
+      fig-title: '**Supplementary Figure**'
+
+editor: visual
+bibliography: references.bib
+csl: jamia.csl
+---
+
+```{r setup}
+#| label: setup
+#| include: false
+library(cowplot)
+library(here)
+library(tidyverse)
+library(readxl)
+library(gt)
+library(captioner)
+library(smdi)
+library(ggimage)
+
+table_cap <- captioner(prefix = "Table")
+```
+
+**Authors**: Janick Weberpals^1^, RPh, PhD, Sudha R. Raman^2^, PhD, Pamela A. Shaw^3^, PhD, MS, Hana Lee^4^, PhD, Bradley G. Hammill^2^, DrPH, Sengwee Toh^5^, ScD, John G. Connolly^5^, ScD, Kimberly J. Dandreo^5^, MS, Fang Tian^6^, PhD, Wei Liu^6^, PhD, Jie Li^6^, PhD, José J. Hernández-Muñoz^6^, PhD, Robert J. Glynn^1^, PhD, ScD, Rishi J. Desai^1^, PhD
+
+[Author affiliations:]{.underline}
+
+^1^ Division of Pharmacoepidemiology and Pharmacoeconomics, Department of Medicine, Brigham and Women's Hospital, Harvard Medical School, Boston, MA
+
+^2^ Department of Population Health Sciences, Duke University School of Medicine, Durham, NC
+
+^3^ Biostatistics Division, Kaiser Permanente Washington Health Research Institute, Seattle, WA
+
+^4^ Office of Biostatistics, Center for Drug Evaluation and Research, US Food and Drug Administration, Silver Spring, MD
+
+^5^ Department of Population Medicine, Harvard Medical School and Harvard Pilgrim Health Care Institute, Boston, MA
+
+^6^ Office of Surveillance and Epidemiology, Center for Drug Evaluation and Research, US Food and Drug Administration, Silver Spring, MD
+
+{{< pagebreak >}}
+
+# Supplementary Methods
+
+## Missingness assumptions
+
+For the design and validation of the `smdi` R package functions, we employed comprehensive simulations and a real-world example [@weberpals2023a]. These simulations followed structural assumptions on realistic missingness generating mechanisms that could be expected in electronic health record (EHR) data. The below directed acyclic diagrams (DAG) [@Moreno-Betancur2018; @sondhi2023a], where a directed edge represents a causal effect of one variable on another variable, outline and illustrate these assumptions along with a brief explanations and exemplary real-world EHR scenarios. Since the `smdi` package was developed with focus on partially observed confounders (as opposed to missingness in exposure or outcome), we simplified the below DAGs by leaving out the nodes for exposure and outcome.
+
+**Notation**: C = Fully observed confounder, POC = True values of the partially observed confounder, POCobs = Observed portion of the partially observed confounder, M = Missingness of POC with M=0 fully observed and M=1 fully missing, U = Unobserved confounder.
+
+### Missing completely at random (MCAR)
+
+The missingness (M) of the partially observed confounder (POC) is independent of any observed and unobserved confounders. That is, no edge directs to M and the missingness is completely at random (MCAR).
+
+[Real-world example:]{.underline} A machine breaks that is used to measure and analyze a certain biomarker.
+
+```{dot}
+//| label: fig-mcar
+//| fig-cap: "Directed acyclic graph displaying a missing completely at random (MCAR) scenario."
+//| fig-width: 4
+digraph {
+  
+  rankdir = LR;
+    #Y [label="Outcome"]
+    #E [label="Exposure"]
+    #C [label="Observed confounder"]
+    #POC [label="Partially observed confounder"]
+    #POCobs [label="Observed portion of the partially observed confounder"]
+    #M [label="Missingness indicator"]
+    
+    C -> POC
+    POC -> POCobs
+    M -> POCobs
+}
+```
+
+### Missing at random (MAR)
+
+The missingness (M) of the partially observed confounder (POC) can be explained by one or multiple fully observed confounders (C). That is, there is an edge between C to M and the missingness is at random (MAR).
+
+[Real-world example:]{.underline} Older patients are more likely to receive a certain biomarker test and age is a fully observed confounder which is measured for every patient in the dataset.
+
+```{dot}
+//| label: fig-mar
+//| fig-cap: "Directed acyclic graph displaying a missing completely at random scenario."
+//| fig-width: 4
+digraph {
+  
+  rankdir = LR;
+    
+    C -> POC
+    POC -> POCobs
+    C -> M
+    M -> POCobs
+}
+```
+
+### Missing not at random - unmeasured (MNAR~unmeasured~)
+
+The missingness (M) of the partially observed confounder (POC) can only be explained by one or multiple confounder(s) which are not observed in the dataset.
+
+[Real-world example:]{.underline} Patients with a certain performance status, which not observed in the dataset, are more likely to receive a lab test.
+
+```{dot}
+//| label: fig-mnarU
+//| fig-cap: "Directed acyclic graph displaying a missing not at random (unmeasured) scenario."
+//| fig-width: 4
+digraph {
+  
+  rankdir = LR;
+    
+    C -> POC
+    POC -> POCobs
+    M -> POCobs
+    U -> M
+    U -> POC
+}
+```
+
+### Missing not at random - value (MNAR~value~)
+
+The missingness (M) of the partially observed confounder (POC) depends on the true value of the partially observed confounder itself.
+
+[Real-world example:]{.underline} Patients with a history of normal biomarker values are systematically less likely to be tested again for the same biomarker.
+
+```{dot}
+//| label: fig-mnarV
+//| fig-cap: "Directed acyclic graph displaying a missing not at random (value) scenario."
+//| fig-width: 4
+digraph {
+  
+  rankdir = LR;
+    
+    C -> POC
+    POC -> POCobs
+    M -> POCobs
+    POC -> M
+}
+```
+
+{{< pagebreak >}}
+
+## Missingness characterization
+
+### Group 1 diagnostics
+
+The featured group 1 diagnostics in `smdi` focus on investigating potential differences in the distribution of characteristics between patients with and without an observed value for a partially observed confounder. To that end, different analytic approaches are leveraged which are described for each function below.
+
+-   `smdi_hotelling()`: This function computes a two-sample Hotelling's T-squared test for the difference in two multivariate means based on the Hotelling's T-Square test statistic [@hotelling1931; @Hotelling]. It assesses whether there is a statistically significant difference between the means of two groups in multivariate data. This test is an extension of the univariate t-test that examines for two groups (i.e., patients with and without a value observed for the confounder of interest) with p variables (e.g., patient or disease characteristics) whether their mean vectors (p-dimensional vectors of means) are significantly different. To that end, the T\^2 statistic is derived by a [vector of covariate means](https://github.com/jmcurran/Hotelling/blob/090f742a631c256de36c1d714ebfa7bc7d90b234/R/hotelling.test.r#L84) (i.e, one element for each covariate) [@rpubsHotelling], which are represented as x bar 1 (vector of covariate means in group 1) and x bar 2 (vector of covariate means in group 2) in the equation [@pennStateHotelling] below (with n1 and n2 representing the sample sizes of group 1 and 2, respectively, and Sp representing the pooled variance-covariance matrix). To implement Hotelling's test in the `smdi` package, we built a wrapper around the `Hotelling::hotelling.test()` function [@Hotelling].
+
+$$T^2 = \mathbf{(\bar{x}_1 - \bar{x}_2)}^T\{\mathbf{S}_p(\frac{1}{n_1}+\frac{1}{n_2})\}^{-1} \mathbf{(\bar{x}_1 - \bar{x}_2)}$$
+
+-   `smdi_little()`: Little's test, as opposed to Hotelling's test, performs a single global test to evaluate the missing completely at random (MCAR) assumption [@little1988]. It was developed since with an approach like Hotelling's test, there can be concerns regarding multiplicity due to the multiple testing of each variable. Little's test first [identifies a set of subgroups that share the same missing data patterns](https://github.com/njtierney/naniar/blob/master/R/mcar-test.R#L54C4-L54C4). Across these missing data patterns, it then tests for mean differences on every variable by comparing the observed means versus expected population means which are [estimated using a maximum likelihood (ML) expectation-maximization (EM) algorithm](https://github.com/njtierney/naniar/blob/master/R/mcar-test.R#L69) as implemented by the `norm::prelim.norm()` and `norm::em.norm()` functions in `R`. Under the assumption of MCAR, the test statistic ($d^2$) approximates a chi-square distribution and is derived by computing the sum of squared standardized differences between the subgroup means and the expected population means weighted by both the estimated variance-covariance matrix and the respective subgroup sizes [@mistyMCAR; @enders2022applied]. To implement Little's test in the `smdi` package, we built a wrapper around the `naniar::mcar_test()` function [@naniar].
+
+$$d^2 = \sum_{j = 1} ^ {J} n_{j}(\hat{\mu}_{j} - \hat{\mu}{j ^ \text{(ML)}})^T \hat{\Sigma}_{j}^{-1} (\hat{\mu}_{j} - \hat{\mu}{j ^ \text{(ML)}})$$
+
+For both `smdi_hotelling()` and `smdi_little()`, a high test statistic and a low p-value would indicate differences in the groups compared. A limitation of both Hotelling's and Little's test is that they assume continuous variables following multivariate normality. Real-world data, however, are often of binary nature and to consider categorical data in the computation of these tests, [categorical data are one-hot encoded to binary dummy variables](https://gitlab.partners.org/janickweberpals/smdi/-/blob/main/R/smdi_hotelling.R?ref_type=heads#L89) before performing each test.
+
+-   `smdi_asmd()`:
+
+{{< pagebreak >}}
+
+# References {.unnumbered}
+
+::: refs
+:::
