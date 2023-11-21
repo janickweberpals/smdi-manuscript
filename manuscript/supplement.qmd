@@ -147,25 +147,71 @@ digraph {
 }
 ```
 
-{{< pagebreak >}}
-
 ## Missingness characterization
+
+This sections provides extensive information and details on key statistical principles and methods employed in the `smdi` package. Details on all package functions can also be found in the corresponding documentation section of the `smdi` package website
+
+<https://janickweberpals.gitlab-pages.partners.org/smdi/reference/index.html>
+
+or accessed in `R` by executing the the function name preceded with a question mark, e.g.:
+
+```{r}
+#| eval: false
+#| echo: true
+?smdi_diagnose()
+```
 
 ### Group 1 diagnostics
 
-The featured group 1 diagnostics in `smdi` focus on investigating potential differences in the distribution of characteristics between patients with and without an observed value for a partially observed confounder. To that end, different analytic approaches are leveraged which are described for each function below.
+The featured group 1 diagnostics in `smdi` focus on investigating potential differences in the distribution of characteristics between patients with and without an observed value for a partially observed confounder. To that end, different analytic approaches are leveraged which are described in detail for each function below.
 
--   `smdi_hotelling()`: This function computes a two-sample Hotelling's T-squared test for the difference in two multivariate means based on the Hotelling's T-Square test statistic [@hotelling1931; @Hotelling]. It assesses whether there is a statistically significant difference between the means of two groups in multivariate data. This test is an extension of the univariate t-test that examines for two groups (i.e., patients with and without a value observed for the confounder of interest) with p variables (e.g., patient or disease characteristics) whether their mean vectors (p-dimensional vectors of means) are significantly different. To that end, the T\^2 statistic is derived by a [vector of covariate means](https://github.com/jmcurran/Hotelling/blob/090f742a631c256de36c1d714ebfa7bc7d90b234/R/hotelling.test.r#L84) (i.e, one element for each covariate) [@rpubsHotelling], which are represented as x bar 1 (vector of covariate means in group 1) and x bar 2 (vector of covariate means in group 2) in the equation [@pennStateHotelling] below (with n1 and n2 representing the sample sizes of group 1 and 2, respectively, and Sp representing the pooled variance-covariance matrix). To implement Hotelling's test in the `smdi` package, we built a wrapper around the `Hotelling::hotelling.test()` function [@Hotelling].
+-   `smdi_hotelling()`: This function computes a two-sample Hotelling's T-squared test for the difference in two multivariate means based on the Hotelling's T-Square test statistic [@hotelling1931; @Hotelling]. It assesses whether there is a statistically significant difference between the means of two groups in multivariate data. This test is an extension of the univariate t-test that examines for two groups (i.e., patients with and without a value observed for the confounder of interest) with p variables (e.g., patient or disease characteristics) whether their mean vectors (p-dimensional vectors of means) are significantly different. To that end, the T\^2 statistic is derived by a [vector of covariate means](https://github.com/jmcurran/Hotelling/blob/090f742a631c256de36c1d714ebfa7bc7d90b234/R/hotelling.test.r#L84) (i.e, one element for each covariate) [@rpubsHotelling], which are represented as $\bar{x}_1$ (vector of covariate means in group 1) and $\bar{x}_2$ (vector of covariate means in group 2) in @eq-hotelling below (with $n_1$ and $n_2$ representing the sample sizes of group 1 and 2, respectively, and $S_p$ representing the pooled variance-covariance matrix) (@eq-hotelling adapted from [@pennStateHotelling]). To implement Hotelling's test in the `smdi` package, we built a wrapper around the `Hotelling::hotelling.test()` function [@Hotelling].
 
-$$T^2 = \mathbf{(\bar{x}_1 - \bar{x}_2)}^T\{\mathbf{S}_p(\frac{1}{n_1}+\frac{1}{n_2})\}^{-1} \mathbf{(\bar{x}_1 - \bar{x}_2)}$$
+$$T^2 = \mathbf{(\bar{x}_1 - \bar{x}_2)}^T\{\mathbf{S}_p(\frac{1}{n_1}+\frac{1}{n_2})\}^{-1} \mathbf{(\bar{x}_1 - \bar{x}_2)}$$ {#eq-hotelling}
 
--   `smdi_little()`: Little's test, as opposed to Hotelling's test, performs a single global test to evaluate the missing completely at random (MCAR) assumption [@little1988]. It was developed since with an approach like Hotelling's test, there can be concerns regarding multiplicity due to the multiple testing of each variable. Little's test first [identifies a set of subgroups that share the same missing data patterns](https://github.com/njtierney/naniar/blob/master/R/mcar-test.R#L54C4-L54C4). Across these missing data patterns, it then tests for mean differences on every variable by comparing the observed means versus expected population means which are [estimated using a maximum likelihood (ML) expectation-maximization (EM) algorithm](https://github.com/njtierney/naniar/blob/master/R/mcar-test.R#L69) as implemented by the `norm::prelim.norm()` and `norm::em.norm()` functions in `R`. Under the assumption of MCAR, the test statistic ($d^2$) approximates a chi-square distribution and is derived by computing the sum of squared standardized differences between the subgroup means and the expected population means weighted by both the estimated variance-covariance matrix and the respective subgroup sizes [@mistyMCAR; @enders2022applied]. To implement Little's test in the `smdi` package, we built a wrapper around the `naniar::mcar_test()` function [@naniar].
+-   `smdi_little()`: Little's test, as opposed to Hotelling's test, performs a single global test to evaluate the missing completely at random (MCAR) assumption [@little1988]. It was developed since with an approach like Hotelling's test, there can be concerns regarding multiplicity due to the multiple testing of each variable. Little's test first [identifies a set of subgroups that share the same missing data patterns $j$](https://github.com/njtierney/naniar/blob/master/R/mcar-test.R#L54C4-L54C4). Across these missing data patterns ($n_j$), it then tests for mean differences on every variable by comparing the observed means ($\hat{\mu}_{j}$) versus expected population means ($\hat{\mu}{j ^ \text{(ML)}}$) which are [estimated using a maximum likelihood (ML) expectation-maximization (EM) algorithm](https://github.com/njtierney/naniar/blob/master/R/mcar-test.R#L69) as implemented by the `norm::prelim.norm()` and `norm::em.norm()` functions in `R` (@eq-little adapted from [@enders2022applied]). Under the assumption of MCAR, the test statistic ($d^2$) approximates a chi-square distribution and is derived by computing the sum of squared standardized differences between the subgroup means and the expected population means weighted by both the estimated variance-covariance matrix (where $\hat{\Sigma}_{j}$ is the maximum likelihood estimate of the covariance matrix) and the respective subgroup sizes [@mistyMCAR; @enders2022applied]. To implement Little's test in the `smdi` package, we built a wrapper around the `naniar::mcar_test()` function [@naniar].
 
-$$d^2 = \sum_{j = 1} ^ {J} n_{j}(\hat{\mu}_{j} - \hat{\mu}{j ^ \text{(ML)}})^T \hat{\Sigma}_{j}^{-1} (\hat{\mu}_{j} - \hat{\mu}{j ^ \text{(ML)}})$$
+$$d^2 = \sum_{j = 1} ^ {J} n_{j}(\hat{\mu}_{j} - \hat{\mu}{j ^ \text{(ML)}})^T \hat{\Sigma}_{j}^{-1} (\hat{\mu}_{j} - \hat{\mu}{j ^ \text{(ML)}})$$ {#eq-little}
 
-For both `smdi_hotelling()` and `smdi_little()`, a high test statistic and a low p-value would indicate differences in the groups compared. A limitation of both Hotelling's and Little's test is that they assume continuous variables following multivariate normality. Real-world data, however, are often of binary nature and to consider categorical data in the computation of these tests, [categorical data are one-hot encoded to binary dummy variables](https://gitlab.partners.org/janickweberpals/smdi/-/blob/main/R/smdi_hotelling.R?ref_type=heads#L89) before performing each test.
+For both `smdi_hotelling()` and `smdi_little()`, a high test statistic and a low p-value would indicate differences in the groups compared. A limitation of both Hotelling's and Little's test is that they assume continuous variables following multivariate normality. Real-world data, however, are often of binary nature and to consider categorical data in the computation of these tests, [categorical data are one-hot encoded to binary dummy variables](https://gitlab.partners.org/janickweberpals/smdi/-/blob/main/R/smdi_hotelling.R?ref_type=heads#L89) before performing each test. In addition, these tests are sensitive to just small differences when study sizes are large which is why we recommend to perform these tests jointly with `smdi_asmd`.
 
--   `smdi_asmd()`:
+-   `smdi_asmd()`: The `smdi_asmd` functions computes the absolute standardized mean difference (ASMD) as a statistical measure for assessing dissimilarities in disease and patient characteristics between individuals with and without observed value for a specific partially observed confounder (POC) of interest. If the median/average ASMD is high, this may indicate imbalance in patient covariate distributions which may be indicative of the POC following a missing at random (MAR) mechanims, i.e. the missingness is explainable by other observed covariates. Similarly, no imbalance between observed covariates may be indicative that missingness cannot be explained with observed covariates and the underlying missingness mechanism may be completely at random (MCAR) or not at random (e.g., missingness is only associated with unobserved factors or through the POC itself). This methodological approach follows the same theory that is often applied to measure covariate balance between two groups before and after matching or weighting on propensity scores, which are balancing scores often used to reduce confounding in real-world evidence studies [@austin2011]. While there isn't a universally established standard for the threshold of the ASMD indicating significant imbalance, an ASMD below 0.1 is often considered indicative of a negligible difference in the mean or prevalence of a covariate between two groups [@Normand2001; @austin2011]. The advantage of ASMDs to assess the balance of patient characteristics between two groups with and without an observed value for the POC is that they are not influenced by sample size, do not come with many assumptions, are easy to interpret and applicable to various types of covariates. @eq-asmd-cont and @eq-asmd-binary illustrate how ASMDs are computed for continous and binary covariates with $\bar{x}$, $s^2$ and $\hat{p}$ indicating the mean, sample variance and prevalence of the binary variable of the covariate in patients with a missing ($M$) and an observed ($O$) value for the POC, respectively. In the `smdi` package, ASMDs are [extracted from tableone objects](https://github.com/kaz-yos/tableone/blob/master/R/modules-smd.R) using the `ExtractSmd` function [@tableone].
+
+$$ASMD_{continous} = |\frac{(\bar{x}_M - \bar{x}_O)}{\sqrt{\frac{s^2_M + s^2_O}{2}}}|$$ {#eq-asmd-cont}
+
+$$ASMD_{binary} = | \frac{(\hat{p_M} - \hat{p_O})}{\sqrt{\frac{\hat{p_M}(1-\hat{p_M}) + \hat{p_O}(1-\hat{p_O})}{2}}} |$$ {#eq-asmd-binary}
+
+### Group 2 diagnostics
+
+-   `smdi_rf()`: The Group 2 diagnostics, implemented in the `smdi_rf()` function, assesses the ability to predict missingness based on observed covariates via the `smdi_rf()` function. This function trains and fits a random forest classification model [@randomForest; @sondhi2023a] to predict the missing indicator of each POC given exposure, outcome, follow-up time, and covariates plus missingness indicator for other POC as the predictors. We chose a random forest classification model for the purpose of this package due its many beneficial features within the context of data structures that are frequently encountered in routine healthcare databases:
+
+    -   Ability to implicitly model nonlinear and non-additive relationships between observed variables (i.e., higher order terms do not need to be explicitly specified).
+
+    -   Recursive partitioning models like random forests have been found to work particularly well with sparse tabular data, which is the typical data type that is used for real-world evidence studies [@SHWARTZZIV202284; @grinsztajn2022treebased].
+
+    -   Random Forests provide transparent feature importance measures, indicating the variables contributing significantly to predicting missingness. This aids in identifying key features driving the missingness mechanisms in the dataset.
+
+    -   Multiple other studies have also reported good result of this random forest-based approach [@sondhi2023a; @beaulieu-jones2018].
+
+The default training parameters of the random forest model include a train-test split of the data (default if 70% training and 30% testing) which can be changed using the `train_test_ratio` parameter and the number of trees to grow using `ntree` (default is 1000 decision trees since a higher number of trees typically give more stable results). Users can optionally select `tune = TRUE` which will perform a 5-fold cross validation and a random search for the optimal number of variables randomly sampled as candidates at each split (`mtry`). However, users should be aware that this may lead to longer computation times with larger datasets which is why the default is set to `FALSE`. In summary, the following parameters are part of this function:
+
+-   `data`: dataframe or tibble object with partially observed/missing variables
+
+-   `covar`: character covariate or covariate vector with partially observed variable/column name(s) to investigate. If NULL, the function automatically includes all columns with at least one missing observation and all remaining covariates will be used as predictors
+
+-   `train_test_ratio`: numeric vector to indicate the test/train split ratio, e.g. c(.7, .3) which is the default
+
+-   `set_seed`: seed for reproducibility, defaults to 42
+
+-   `ntree`: integer, number of trees (defaults to 1000 trees)
+
+-   `n_cores`: integer, if \>1, computations will be parallelized across the amount of cores specified in `n_cores`. This is important especially for larger datasets as the random forest training can be very time-consuming if done sequentially.
+
+### Group 3 diagnostics
+
+To evaluate the association of the misssing indicator variable of a POC ($M_{POC}$) and the studied outcome in Group 3 Diagnostics, conventional univariate and multivariate regression models which are found used in the vast majority of real-world evidence studies are employed. The selection of regression type needs to be chosen using the `model` parameter and is determined by the type of outcome that is studied. The possible outcome models include linear regression [@stats] for continuous outcomes (@eq-linear), logistic regression [@glmnet] for binary outcomes (@eq-logistic) and a Cox proportional hazards regression [@survival] for time-to-event outcomes (@eq-cox) with $X_j$ indicating other covariates included in the multivariate models. The `form_lhs` specifies the left-hand side of the outcome formula, which, in case of `model = "linear"` or `model = "logistic` just reflects the name of the column that contains the outcome and the form `Surv(time, status)` for `model ="cox"` indicating the time-to-event variable and the event status (0/1). The output of the functions automatically returns results for both the univariate and the multivariate models and a user has the choice to have the $\beta_1M_{POC}$ estimate exponentiated or not using the logical `exponentiated` parameter.
+
+$$Y = \beta_0 + \beta_1M_{POC} + ... + \beta_2X_j$$ {#eq-linear} $$\ln(\frac{p}{p-1}) = \beta_0 + \beta_1M_{POC} + ... + \beta_2X_j$$ {#eq-logistic} $$h(t) = h_0(t) e^{\sum{\beta_1M_{POC} + ... +  \beta_2X_j}} $$ {#eq-cox}
 
 {{< pagebreak >}}
 

@@ -165,6 +165,14 @@ The workflow is generally categorized into descriptives, pattern diagnostics, an
 
 For all functions in the `smdi` package, a *dataframe* is expected (`data` parameter) as input with a format where one row represents one unique patient and the columns represent relevant variables, i.e., exposure, outcome, fully observed covariates and the POCs. Any non-informative columns, e.g., patient identifiers, should be dropped from the dataframe before calling the functions. Throughout all functions, users have the option to specify a vector with the column name(s) of the POC(s) that should be investigated (`covar` parameter). If nothing is specified, all functions automatically consider any variable in the dataframe that exhibits at least one missing value.
 
+Details on each methodology and function can be found in the **Supplementary Methods** and in the documentation of each respective function which can be accessed by preceding the function name with a question mark, e.g.:
+
+```{r}
+#| eval: false
+#| echo: true
+?smdi_diagnose()
+```
+
 ### Descriptives and Pattern Diagnostics
 
 As a first step to explore the missingness in new datasets, the `smdi` package provides a few basic functions to describe and summarize missingness across all covariates. The `smdi_summarize()` function returns the amount and proportion of missing observations, which can also be stratified by a grouping variable. The `smdi_vis()` function returns a corresponding bar chart plot (example @fig-examples a).
