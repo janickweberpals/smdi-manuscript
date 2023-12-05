@@ -6,6 +6,8 @@ date: "`r Sys.Date()`"
 
 # smdi: An R package to perform structural missing data investigations on partially observed confounders in real-world evidence studies
 
+[![DOI](https://zenodo.org/badge/675783358.svg)](https://zenodo.org/doi/10.5281/zenodo.10267623)
+
 ## Background
 
 This manuscript provides context and details about the smdi R package that was developed as a result of the findings of a comprehensive Sentinel Innovation Center project on `principled approaches on partially observed confounder data` in electronic health records.

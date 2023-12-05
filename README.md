@@ -1,5 +1,7 @@
 # smdi: An R package to perform structural missing data investigations on partially observed confounders in real-world evidence studies
 
+[![DOI](https://zenodo.org/badge/675783358.svg)](https://zenodo.org/doi/10.5281/zenodo.10267623)
+
 ## Background
 
 This manuscript provides context and details about the smdi R package
@@ -43,13 +45,17 @@ running the following command:
     ## │   ├── Figure_3_results.jpg
     ## │   └── manual_figures.pptx
     ## ├── manuscript
+    ## │   ├── Responses JAMIO-2023-0165_R1.docx
     ## │   ├── cover_letter.docx
     ## │   ├── custom-reference-doc.docx
     ## │   ├── docx-landscape.lua
     ## │   ├── jamia.csl
     ## │   ├── manuscript.docx
     ## │   ├── manuscript.qmd
-    ## │   └── references.bib
+    ## │   ├── manuscript_track_changes.docx
+    ## │   ├── references.bib
+    ## │   ├── supplement.pdf
+    ## │   └── supplement.qmd
     ## ├── renv
     ## │   ├── activate.R
     ## │   ├── library
