@@ -67,7 +67,7 @@ Email: [jweberpals\@bwh.harvard.edu](mailto:jweberpals@bwh.harvard.edu)
 
 [**Article type:**]{.underline} Application Note
 
-[**Word count:**]{.underline} 2,514 words
+[**Word count:**]{.underline} 2,522 words
 
 [**Tables:**]{.underline} 2
 
@@ -234,7 +234,7 @@ The `smdi_style_gt()` function is an ancillary function that takes an object of 
 
 Missing data are ubiquitous in RWE studies involving EHR and may introduce bias if not handled appropriately. To address this issue, we developed the `smdi` R package to streamline routine diagnostics of missing data.
 
-The package does come with certain limitations, such that the true underlying mechanism causing the missing data can never be inferred with absolute certainty from the observed data. Therefore, it's important to complement diagnostic results with substantive expert knowledge to factor in how covariates are measured in routine care and contextualize potential reasons for missingness. This collaborative approach allows for a contextualized understanding of potential causes for missing data in EHR.
+The package should be used with certain limitations in mind. Most importantly, the true underlying mechanism causing the missing data can never be inferred with absolute certainty from the observed data. Therefore, it is important to complement diagnostic results with substantive expert knowledge to factor in how covariates are measured in routine care, which could be system-specific, and contextualize potential reasons for missingness. This collaborative approach allows for a contextualized understanding of potential causes for missing data in EHR.
 
 ## Conclusions
 
