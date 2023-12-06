@@ -79,14 +79,6 @@ Email: [jweberpals\@bwh.harvard.edu](mailto:jweberpals@bwh.harvard.edu)
 
 [**Keywords:**]{.underline} Missing data, Confounder, EHR, R, Software, Real-World Evidence
 
-[**Funding:**]{.underline} This project was supported by Master Agreement 75F40119D10037 from the US Food and Drug Administration (FDA).
-
-[**Disclosures/COI:**]{.underline} The FDA approved the study protocol, statistical analysis plan and reviewed and approved this manuscript. Coauthors from the FDA participated in the results interpretation and in the preparation and decision to submit the manuscript for publication. The FDA had no role in data collection, management, or analysis. The views expressed are those of the authors and not necessarily those of the US FDA. Janick Weberpals reports prior employment by Hoffmann-La Roche and previously held shares in Hoffmann-La Roche. Pamela Shaw is a named inventor on a patent licensed to Novartis by the University of Pennsylvania for an unrelated project. Sengwee Toh serves as a consultant for Pfizer, Inc. and TriNetX, LLC.. Robert J Glynn has received research funding through his employer from Amarin, Kowa, Novartis, and Pfizer. Dr. Desai reports serving as Principal Investigator on investigator-initiated grants to the Brigham and Women's Hospital from Novartis, Vertex, and Bristol-Myers-Squibb on unrelated projects. All remaining authors report no disclosures or conflicts of interest.
-
-[**Analytical code and data sharing statement:**]{.underline} This manuscript was written using `Quarto` version 1.3.433 (<https://quarto.org/>) and R version 4.1.2. All R code, materials and depedencies can be found at <https://gitlab-scm.partners.org/drugepi/smdi-manuscript> or <https://github.com/janickweberpals/smdi-manuscript>. The R package presented in this study can be downloaded from the comprehensive R archive network (CRAN) via `install.packages("smdi")` (version 0.2.2 at time of manuscript submission) or from [https://janickweberpals.gitlab-pages.partners.org/smdi](https://janickweberpals.gitlab-pages.partners.org/smdi/){.uri}.
-
-[**Acknowledgments:**]{.underline} We would like to thank all beta testers and attendees of the Division of Pharmacoepidemiology and Pharmacoeconomics Methods Incubator who gave valuable feedback on early versions of the `smdi` R package.
-
 {{< pagebreak >}}
 
 # Abstract {.unnumbered}
@@ -242,6 +234,18 @@ The `smdi` R package is a powerful and convenient tool to implement principled r
 
 {{< pagebreak >}}
 
+[**Funding Statement:**]{.underline} This project was supported by Master Agreement 75F40119D10037 from the US Food and Drug Administration (FDA).
+
+[**Competing Interests Statement:**]{.underline} The FDA approved the study protocol, statistical analysis plan and reviewed and approved this manuscript. Coauthors from the FDA participated in the results interpretation and in the preparation and decision to submit the manuscript for publication. The FDA had no role in data collection, management, or analysis. The views expressed are those of the authors and not necessarily those of the US FDA. Janick Weberpals reports prior employment by Hoffmann-La Roche and previously held shares in Hoffmann-La Roche. Pamela Shaw is a named inventor on a patent licensed to Novartis by the University of Pennsylvania for an unrelated project. Sengwee Toh serves as a consultant for Pfizer, Inc. and TriNetX, LLC.. Robert J Glynn has received research funding through his employer from Amarin, Kowa, Novartis, and Pfizer. Dr. Desai reports serving as Principal Investigator on investigator-initiated grants to the Brigham and Women's Hospital from Novartis, Vertex, and Bristol-Myers-Squibb on unrelated projects. All remaining authors report no disclosures or conflicts of interest.
+
+[**Data Availability Statement:**]{.underline} The R package presented in this study and corresponding data can be downloaded from the comprehensive R archive network (CRAN) via `install.packages("smdi")` (version 0.2.2 at time of manuscript submission) or from [https://janickweberpals.gitlab-pages.partners.org/smdi](https://janickweberpals.gitlab-pages.partners.org/smdi/){.uri}. This manuscript was written using `Quarto` version 1.3.433 (<https://quarto.org/>) and R version 4.1.2. All R code, materials and dependencies can be found at <https://gitlab-scm.partners.org/drugepi/smdi-manuscript> or <https://github.com/janickweberpals/smdi-manuscript>.
+
+[**Contributorship Statement:**]{.underline} JW designed and developed the `smdi` R package and drafted the manuscript. SRR, PAS, HL, BGH, ST, JGC, KJD, FT, WL, JL, JJH, RJG, RJD contributed to the conception, design and interpretation and provided important feedback. All authors critically reviewed the manuscript for important intellectual content and approved of the final version of the manuscript.
+
+[**Acknowledgments:**]{.underline} We would like to thank all beta testers and attendees of the Division of Pharmacoepidemiology and Pharmacoeconomics Methods Incubator who gave valuable feedback on early versions of the `smdi` R package.
+
+{{< pagebreak >}}
+
 # References {.unnumbered}
 
 ::: {#refs}
@@ -300,7 +304,7 @@ smdi_diagnose(
 #| echo: false
 #| out-width: 110%
 
-knitr::include_graphics(here::here("figures", "Figure_1_workflow.jpg"))
+knitr::include_graphics(here::here("figures", "Figure_1_workflow.png"))
 ```
 
 {{< pagebreak >}}
@@ -371,7 +375,7 @@ panel <- cowplot::plot_grid(
 
 panel 
 
-jpeg(here::here("figures", "Figure_2_visuals.jpg"), width = 22, height = 11, units = "in", res=400)
+png(here::here("figures", "Figure_2_visuals.png"), width = 22, height = 11, units = "in", res=400)
 panel
 invisible(dev.off())
 ```
@@ -386,6 +390,6 @@ invisible(dev.off())
 #| fig-dpi: 400
 #| fig-width: 22
 #| fig-height: 11
-knitr::include_graphics(here::here("figures", "Figure_3_results.jpg"))
+knitr::include_graphics(here::here("figures", "Figure_3_results.png"))
 ```
 :::
