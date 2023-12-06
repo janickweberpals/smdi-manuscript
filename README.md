@@ -40,13 +40,12 @@ running the following command:
     ## ├── README.Rmd
     ## ├── README.md
     ## ├── figures
-    ## │   ├── Figure_1_workflow.jpg
-    ## │   ├── Figure_2_visuals.jpg
-    ## │   ├── Figure_3_results.jpg
+    ## │   ├── Figure_1_workflow.png
+    ## │   ├── Figure_2_visuals.png
+    ## │   ├── Figure_3_results.png
     ## │   └── manual_figures.pptx
     ## ├── manuscript
     ## │   ├── Responses JAMIO-2023-0165_R1.docx
-    ## │   ├── cover_letter.docx
     ## │   ├── custom-reference-doc.docx
     ## │   ├── docx-landscape.lua
     ## │   ├── jamia.csl
